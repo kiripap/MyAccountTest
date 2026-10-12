@@ -1,0 +1,30 @@
+{
+  "name": "react-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@arc-ui/components": "^13.16.0",
+    "@arc-ui/icons": "^13.16.0",
+    "@arc-ui/tokens-arc": "^13.16.0",
+    "@arc-ui/tokens-bt-business": "^13.16.0",
+    "lottie-react": "^3.1.2",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}

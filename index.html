@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BT Business | Repairs</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <style>
+        @font-face { font-family: 'BT Curve'; font-weight: 400; src: local('BT Curve Regular'), local('BTCurve-Regular'); }
+        @font-face { font-family: 'BT Curve'; font-weight: 500; src: local('BT Curve Headline'), local('BTCurve-Headline'); }
+        @font-face { font-family: 'BT Curve'; font-weight: 700; src: local('BT Curve Bold'), local('BTCurve-Bold'); }
+
+        :root {
+            --indigo-800: #5514B4;
+            --indigo-900: #3F187F;   /* primary hover - darker */
+            --indigo-1000: #2A1C4A;
+            --indigo-50: #F8EFFF;
+            --text-primary: #2A2A2A;
+            --text-secondary: #434343;
+            --text-tertiary: #6B6B6B;
+            --border-neutral: #D9D9D9;
+            --surface-neutral: #F7F7F7;
+            --row-hover: #F2F2F2;
+
+            /* Arc responsive section margin (outer page padding) — default xxl */
+            --section-margin: 96px;
+            /* Arc grid gutter — default xl */
+            --grid-gutter: 40px;
+        }
+
+        /* ─────────────── ARC RESPONSIVE BREAKPOINTS ───────────────
+           xs 320 · s 636 · m 768 · l 1024 · xl 1280 · xxl 1440 · xxxl 1920 */
+        @media (max-width: 1439px) { :root { --section-margin: 64px; --grid-gutter: 32px; } }
+        @media (max-width: 1279px) { :root { --section-margin: 48px; --grid-gutter: 32px; } }
+        @media (max-width: 1023px) { :root { --section-margin: 32px; --grid-gutter: 24px; } }
+        @media (max-width: 767px)  { :root { --section-margin: 24px; --grid-gutter: 16px; } }
+        @media (max-width: 635px)  { :root { --section-margin: 16px; --grid-gutter: 16px; } }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'BT Curve', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: white;
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .page { width: 100%; margin: 0 auto; background: white; min-height: 100vh; }
+
+        /* Shared content width wrapper — header, body & footer all use this so edges align */
+        .container { max-width: 1440px; margin: 0 auto; }
+        .bleed { padding-left: var(--section-margin); padding-right: var(--section-margin); }
+
+        /* ─────────────── ARC NAVIGATION HEADER ─────────────── */
+        .arc-nav { height: 80px; border-bottom: 1px solid var(--border-neutral); background: white; }
+        .arc-nav-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding-left: var(--section-margin);
+            padding-right: var(--section-margin);
+            gap: 40px;
+        }
+        .arc-nav-logo { width: 44px; height: 44px; flex-shrink: 0; }
+        .arc-nav-logo svg { width: 100%; height: 100%; display: block; }
+        .arc-nav-items { display: flex; align-items: center; gap: 32px; flex: 1; }
+        .arc-nav-item {
+            display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 400;
+            color: var(--text-primary); cursor: pointer; padding: 6px 0; position: relative; white-space: nowrap;
+        }
+        .arc-nav-item.active { color: var(--indigo-800); font-weight: 500; }
+        .arc-nav-item.active::after {
+            content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 2px; background: var(--indigo-800);
+        }
+        .arc-nav-item svg { width: 16px; height: 16px; }
+        .arc-nav-right { display: flex; align-items: center; gap: 32px; }
+        .arc-nav-avatar {
+            width: 40px; height: 40px; border-radius: 50%; background: #E8A3A8; color: white;
+            display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; flex-shrink: 0;
+        }
+        .nav-collapsible { display: flex; align-items: center; gap: 32px; flex: 1; }
+        /* Collapse secondary nav on smaller widths */
+        @media (max-width: 1023px) {
+            .arc-nav-items .arc-nav-item:nth-child(n+2) { display: none; }
+            .arc-nav-right .arc-nav-item { display: none; }
+        }
+
+        /* ─────────────── PAGE HEADER ─────────────── */
+        .page-header {
+            min-height: 160px; display: flex; flex-direction: column; justify-content: center;
+            gap: 8px; padding-top: 48px; padding-bottom: 16px;
+        }
+        .page-header h1 {
+            font-size: 48px; font-weight: 500; line-height: 1.15; color: var(--text-primary);
+            text-transform: uppercase; letter-spacing: -0.3px;
+        }
+        .page-header p { font-size: 16px; line-height: 24px; color: var(--text-secondary); max-width: 1010px; margin-top: 8px; }
+        @media (max-width: 767px) { .page-header h1 { font-size: 36px; line-height: 44px; } }
+
+        .main { padding-bottom: 80px; }
+
+        /* ─────────────── LOADING CAROUSEL ─────────────── */
+        .loading-section { display: flex; flex-direction: column; align-items: center; padding: 24px 0 0; }
+        .carousel-viewport {
+            position: relative; width: 100%; max-width: 1010px; height: 460px; overflow: hidden;
+            -webkit-mask-image: linear-gradient(to right, transparent 0, black 20%, black 80%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, black 20%, black 80%, transparent 100%);
+        }
+        /* Static pulsing purple circle, centred, behind slides */
+        .pulse-circle {
+            position: absolute; top: 24px; left: 50%; transform: translateX(-50%);
+            width: 360px; height: 360px; border-radius: 50%; background: #F2EDF9; z-index: 0;
+            animation: pulse 2.4s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.9; }
+            50%      { transform: translateX(-50%) scale(1.07); opacity: 1; }
+        }
+        .carousel-track {
+            position: absolute; top: 0; left: 0; height: 100%; display: flex; z-index: 1;
+            transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        .carousel-slide {
+            width: 1010px; height: 440px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+        }
+        /* Larger animations: fill the circle more generously */
+        .lottie-holder { width: 440px; height: 420px; }
+        .lottie-holder.lottie-lg { width: 520px; height: 440px; }
+
+        .loading-caption {
+            display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 8px; text-align: center;
+        }
+        .arc-spinner {
+            width: 24px; height: 24px; border: 3px solid #E0E0E0; border-top-color: var(--indigo-800);
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .caption-text { position: relative; min-height: 48px; display: flex; flex-direction: column; align-items: center; }
+        .caption-item {
+            display: flex; flex-direction: column; align-items: center; gap: 5px; opacity: 0;
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%) translateY(6px);
+            transition: opacity 0.5s ease, transform 0.5s ease; white-space: nowrap;
+        }
+        .caption-item.active { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .caption-title { font-size: 16px; font-weight: 500; line-height: 20px; color: var(--text-primary); }
+        .caption-desc { font-size: 14px; line-height: 18px; color: var(--text-tertiary); }
+        @media (max-width: 767px) { .caption-item { white-space: normal; max-width: 320px; } }
+
+        /* ─────────────── BUTTONS ─────────────── */
+        .btn-primary, .btn-secondary {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px;
+            font-family: 'BT Curve', sans-serif; font-size: 16px; font-weight: 500; border-radius: 980px;
+            cursor: pointer; transition: background 0.2s, border-color 0.2s, color 0.2s; white-space: nowrap;
+            border: 2px solid var(--indigo-800);
+        }
+        /* Primary: fill darkens on hover */
+        .btn-primary { color: white; background: var(--indigo-800); }
+        .btn-primary:hover { background: var(--indigo-900); border-color: var(--indigo-900); }
+        /* Secondary: no fill; stroke (and text) darken on hover */
+        .btn-secondary { color: var(--indigo-800); background: transparent; }
+        .btn-secondary:hover { background: transparent; border-color: var(--indigo-900); color: var(--indigo-900); }
+        .btn-primary svg, .btn-secondary svg { width: 20px; height: 20px; }
+        .btn-sm { padding: 8px 16px; font-size: 14px; }
+        .btn-block { width: 100%; margin-top: auto; }
+        .btn-noclick { pointer-events: none; }
+
+        /* ─────────────── FAULT CARDS ─────────────── */
+        .section-title { font-size: 32px; font-weight: 500; line-height: 40px; margin-bottom: 24px; }
+        .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--grid-gutter); }
+        @media (max-width: 1023px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 767px)  { .cards-grid { grid-template-columns: 1fr; } }
+
+        .fault-card {
+            border-radius: 32px; display: flex; flex-direction: column; min-height: 393px;
+            opacity: 0; transform: translateY(24px);
+        }
+        .results-visible .fault-card { animation: cardIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .results-visible .fault-card:nth-child(1) { animation-delay: 0.1s; }
+        .results-visible .fault-card:nth-child(2) { animation-delay: 0.3s; }
+        .results-visible .fault-card:nth-child(3) { animation-delay: 0.5s; }
+        @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
+
+        .card-red { background: #FFE9EC; border: 1px solid #FA9590; padding: 32px; }
+        .card-amber { background: #FEF6DE; border: 1px solid #FFA200; padding: 0; }
+        .card-amber .card-body { padding: 24px 32px 32px; display: flex; flex-direction: column; flex: 1; }
+        .amber-banner {
+            background: #FFA200; border-radius: 32px 32px 0 0; display: flex; align-items: center;
+            justify-content: center; gap: 4px; padding: 8px; color: white; font-size: 16px; font-weight: 500; line-height: 24px;
+        }
+        .amber-banner svg { width: 20px; height: 20px; flex-shrink: 0; }
+        .card-service-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .card-icon-circle {
+            width: 49px; height: 49px; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; flex-shrink: 0;
+        }
+        .card-red .card-icon-circle { background: #FFC8CB; }
+        .card-amber .card-icon-circle { background: #FCEAAC; }
+        .card-icon-circle svg { width: 40px; height: 40px; color: var(--text-primary); }
+        .card-service-info { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+        .card-service-name { font-size: 20px; font-weight: 500; line-height: 28px; }
+        .card-service-id {
+            font-size: 14px; font-weight: 500; line-height: 16px; letter-spacing: 1.4px;
+            text-transform: uppercase; color: var(--text-secondary);
+        }
+        .action-badge {
+            background: #FFA200; color: white; font-size: 12px; font-weight: 500; line-height: 12px;
+            padding: 6px 8px; border-radius: 1000px; white-space: nowrap; align-self: center;
+        }
+        .card-location {
+            display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 8px;
+            background: rgba(255,255,255,0.4); margin-bottom: 16px;
+        }
+        .card-location svg { width: 32px; height: 32px; color: var(--text-secondary); flex-shrink: 0; }
+        .card-location-text { font-size: 16px; line-height: 24px; color: var(--text-secondary); }
+        .card-description { flex: 1; margin-bottom: 16px; }
+        .card-description p { font-size: 16px; line-height: 24px; color: var(--text-secondary); }
+        .card-estimate { display: flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 16px; margin-top: 16px; }
+        .card-red .card-estimate { background: #FFC8CB; }
+        .card-estimate svg { width: 24px; height: 24px; color: var(--text-primary); flex-shrink: 0; }
+        .card-estimate span { font-size: 14px; font-weight: 500; line-height: 16px; }
+
+        /* ─────────────── ARC CONTENT SWITCHER (sliding pill) ─────────────── */
+        .switcher-row { display: flex; justify-content: center; margin: 80px 0 48px; }
+        .arc-switcher {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            background: white;
+            border: 1px solid var(--border-neutral);
+            border-radius: 1000px;
+            padding: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+        }
+        /* The moving pill lives behind the labels and animates its position/size */
+        .switcher-pill {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            left: 4px;
+            background: var(--indigo-800);
+            border-radius: 1000px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 0;
+        }
+        .switcher-tab {
+            position: relative;
+            z-index: 1;
+            font-family: 'BT Curve', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+            background: transparent;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 1000px;
+            cursor: pointer;
+            transition: color 0.25s;
+            white-space: nowrap;
+        }
+        .switcher-tab.active { color: white; }
+
+        /* ─────────────── TABLE ─────────────── */
+        .table-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; gap: 24px; }
+        .table-header-text h2 { font-size: 32px; font-weight: 500; line-height: 40px; margin-bottom: 8px; }
+        .table-header-text p { font-size: 16px; line-height: 24px; color: var(--text-secondary); max-width: 872px; }
+        @media (max-width: 767px) { .table-header { flex-direction: column; } }
+        .controls-row { display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+        .input-field {
+            width: 290px; max-width: 100%; height: 48px; border: 1px solid var(--text-tertiary); border-radius: 12px;
+            padding: 0 12px; font-size: 16px; background: white;
+            display: flex; align-items: center; justify-content: space-between; cursor: text;
+        }
+        .input-field .placeholder { color: #C8C8C8; }
+        .input-field svg { width: 20px; height: 20px; color: var(--text-tertiary); flex-shrink: 0; }
+
+        .data-table { width: 100%; border: 1px solid var(--border-neutral); border-radius: 32px; overflow: hidden; background: white; }
+        /* Horizontal scroll on narrow screens so the grid keeps its shape */
+        .table-scroll { width: 100%; overflow-x: auto; }
+        .table-grid { display: grid; grid-template-columns: 1fr 180px 330px 220px 200px; min-width: 980px; }
+        .grid-header { display: contents; }
+        .grid-header .cell {
+            background: var(--surface-neutral); border-top: 1px solid var(--border-neutral);
+            border-bottom: 1px solid var(--border-neutral); padding: 16px; height: 56px;
+            display: flex; align-items: center; gap: 4px; font-size: 16px; font-weight: 500;
+        }
+        .grid-header .cell svg { width: 24px; height: 24px; color: var(--indigo-800); flex-shrink: 0; }
+        .grid-row { display: contents; }
+        .grid-row .cell {
+            background: white; border-bottom: 1px solid var(--border-neutral); padding: 16px; height: 72px;
+            display: flex; align-items: center; gap: 8px; font-size: 16px; transition: background 0.15s ease;
+        }
+        .grid-row:hover .cell { background: var(--row-hover); }
+        .grid-row:last-child .cell { border-bottom: none; }
+        .grid-row .cell svg.row-icon { width: 24px; height: 24px; color: var(--indigo-800); flex-shrink: 0; }
+        .grid-row .cell .btn-secondary { pointer-events: auto; position: relative; z-index: 1; }
+        .status-badge { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 1000px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+        .status-badge.success { background: #E6F4E5; color: #036C01; }
+        .status-badge.pending { background: #FEF6DE; color: #8A5A00; }
+        .cell-empty { color: var(--text-tertiary); }
+
+        .table-footer { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; gap: 16px; flex-wrap: wrap; }
+        .table-footer-text { font-size: 16px; }
+        .table-footer-text strong { font-weight: 500; }
+        .pagination { display: flex; align-items: center; gap: 8px; }
+        .page-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: background 0.15s; }
+        .page-dot:hover { background: var(--surface-neutral); }
+        .page-dot.active { background: var(--indigo-1000); color: white; }
+        .page-dot.dots { cursor: default; }
+        .page-arrow { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--indigo-800); border-radius: 50%; transition: background 0.15s; }
+        .page-arrow:hover { background: var(--surface-neutral); }
+        .page-arrow.disabled { opacity: 0; pointer-events: none; }
+
+        /* ─────────────── ARC SITE FOOTER ─────────────── */
+        .arc-footer { background: white; border-top: 1px solid var(--border-neutral); margin-top: 64px; }
+        .arc-footer-inner {
+            max-width: 1440px; margin: 0 auto;
+            padding: 48px var(--section-margin);
+        }
+        .arc-footer-tagline { font-size: 16px; color: var(--text-secondary); margin-bottom: 40px; }
+        .arc-footer-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-bottom: 48px; }
+        @media (max-width: 767px) { .arc-footer-cols { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 635px) { .arc-footer-cols { grid-template-columns: 1fr; } }
+        .arc-footer-col h4 { font-size: 16px; font-weight: 500; margin-bottom: 16px; color: var(--text-primary); }
+        .arc-footer-col ul { list-style: none; }
+        .arc-footer-col li { font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .arc-footer-col li:hover { color: var(--indigo-800); }
+        .arc-footer-col li svg { width: 16px; height: 16px; }
+        .arc-footer-bottom {
+            border-top: 1px solid var(--border-neutral); padding: 24px var(--section-margin);
+            max-width: 1440px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+        }
+        .arc-footer-legal { display: flex; gap: 24px; flex-wrap: wrap; }
+        .arc-footer-legal span { font-size: 13px; color: var(--text-secondary); cursor: pointer; }
+        .arc-footer-legal span:hover { color: var(--indigo-800); }
+        .arc-footer-copy { font-size: 13px; color: var(--text-tertiary); display: flex; align-items: center; gap: 12px; }
+        .arc-footer-copy .mini-logo { width: 28px; height: 28px; }
+        .arc-footer-copy .mini-logo svg { width: 100%; height: 100%; display: block; }
+
+        /* ─────────────── TRACK A FAULT PAGE ─────────────── */
+        .status-badge.info { background: #E6F0FF; color: #0B5CAB; }
+
+        .breadcrumbs { display: flex; align-items: center; gap: 8px; padding-top: 32px; }
+        .crumb { font-size: 14px; color: var(--indigo-800); cursor: pointer; }
+        .crumb:hover { text-decoration: underline; }
+        .crumb.current { color: var(--text-secondary); cursor: default; }
+        .crumb.current:hover { text-decoration: none; }
+        .crumb-sep { width: 16px; height: 16px; color: var(--text-tertiary); }
+
+        .taf-header { min-height: 0; padding-top: 16px; padding-bottom: 32px; }
+        .taf-subhead { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 16px; color: var(--text-secondary); }
+        .taf-subhead .sep { color: var(--border-neutral); }
+
+        .taf-grid { display: grid; grid-template-columns: 1fr 395px; gap: var(--grid-gutter); align-items: start; }
+        @media (max-width: 1023px) { .taf-grid { grid-template-columns: 1fr; } }
+
+        .taf-progress-card {
+            border: 1px solid var(--border-neutral); border-radius: 24px; padding: 32px; background: white;
+        }
+        .taf-progress-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+        .taf-estimate { font-size: 14px; color: var(--text-secondary); }
+        .taf-update-box { background: var(--surface-neutral); border-radius: 16px; padding: 24px; margin-bottom: 32px; }
+        .taf-update-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 8px; }
+        .taf-update-title { font-size: 20px; font-weight: 500; color: var(--text-primary); }
+        .taf-update-time { font-size: 13px; color: var(--text-tertiary); white-space: nowrap; }
+        .taf-update-body { font-size: 14px; line-height: 20px; color: var(--text-secondary); }
+
+        /* Vertical progress stepper */
+        .progress-stepper { list-style: none; padding: 0 8px; }
+        .step { position: relative; display: flex; gap: 16px; padding-bottom: 28px; }
+        .step:not(.last)::before {
+            content: ''; position: absolute; left: 9px; top: 24px; bottom: 0; width: 2px; background: var(--border-neutral);
+        }
+        .step-marker {
+            width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border-neutral);
+            background: white; flex-shrink: 0; margin-top: 2px; z-index: 1; position: relative;
+        }
+        .step.active .step-marker { border-color: var(--indigo-800); box-shadow: inset 0 0 0 3px var(--indigo-800); }
+        .step-content { display: flex; flex-direction: column; gap: 2px; }
+        .step-title { font-size: 16px; font-weight: 500; color: var(--text-primary); }
+        .step.active .step-title { color: var(--indigo-800); }
+        .step-date { font-size: 13px; color: var(--text-tertiary); }
+        .step-desc { font-size: 14px; line-height: 20px; color: var(--text-secondary); margin-top: 2px; }
+
+        .taf-side { display: flex; flex-direction: column; gap: 24px; }
+        .taf-alert-card { border: 1px solid #FFA200; border-radius: 24px; padding: 24px; background: white; }
+        .taf-alert-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .taf-alert-icon { width: 24px; height: 24px; flex-shrink: 0; }
+        .taf-alert-title { font-size: 20px; font-weight: 500; }
+        .taf-alert-body { font-size: 14px; line-height: 20px; color: var(--text-secondary); margin-bottom: 20px; }
+
+        .taf-details-card { border: 1px solid var(--border-neutral); border-radius: 24px; padding: 24px; background: white; }
+        .taf-details-title { font-size: 20px; font-weight: 500; margin-bottom: 16px; }
+        .taf-detail-block { background: var(--surface-neutral); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+        .taf-detail-block:last-child { margin-bottom: 0; }
+        .taf-detail-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .taf-detail-label { font-size: 14px; color: var(--text-tertiary); }
+        .taf-edit { width: 20px; height: 20px; color: var(--indigo-800); cursor: pointer; }
+        .taf-detail-value { font-size: 15px; line-height: 22px; color: var(--text-primary); }
+
+        .taf-section { margin-top: 64px; }
+        .taf-faq-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+        .taf-faq-sub { font-size: 14px; color: var(--text-secondary); margin-top: -4px; }
+
+        .faq-list { display: flex; flex-direction: column; gap: 12px; }
+        .faq-item { background: var(--surface-neutral); border-radius: 12px; overflow: hidden; }
+        .faq-item summary {
+            list-style: none; cursor: pointer; padding: 20px 24px; font-size: 16px; font-weight: 400;
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item summary svg { width: 24px; height: 24px; color: var(--text-secondary); transition: transform 0.2s; flex-shrink: 0; }
+        .faq-item[open] summary svg { transform: rotate(180deg); }
+        .faq-body { padding: 0 24px 20px; font-size: 14px; line-height: 22px; color: var(--text-secondary); }
+
+        /* TAF related mini-table */
+        .taf-related-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr 1fr; min-width: 920px; }
+        .taf-grid-header, .taf-grid-row { display: contents; }
+        .taf-grid-header .cell {
+            background: var(--surface-neutral); border-bottom: 1px solid var(--border-neutral);
+            padding: 16px; height: 56px; display: flex; align-items: center; font-size: 14px; font-weight: 500; color: var(--text-secondary);
+        }
+        .taf-grid-row .cell {
+            background: white; border-bottom: 1px solid var(--border-neutral); padding: 16px; height: 72px;
+            display: flex; align-items: center; gap: 8px; font-size: 15px; transition: background 0.15s;
+        }
+        .taf-grid-row:hover .cell { background: var(--row-hover); }
+        .taf-grid-row:last-child .cell { border-bottom: none; }
+        .taf-grid-row .cell svg.row-icon { width: 24px; height: 24px; color: var(--indigo-800); flex-shrink: 0; }
+        .taf-grid-row .cell .btn-primary { pointer-events: none; } /* preview only */
+
+        .taf-interested { background: #F3EDFB; margin-top: 64px; padding: 48px 0; }
+        .interested-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--grid-gutter); margin-top: 32px; }
+        @media (max-width: 1023px) { .interested-grid { grid-template-columns: 1fr; } }
+        .interested-card { background: white; border-radius: 16px; padding: 24px; }
+        .interested-icon { width: 32px; height: 32px; color: var(--indigo-800); margin-bottom: 16px; }
+        .interested-card h3 { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+        .interested-card p { font-size: 14px; line-height: 20px; color: var(--text-secondary); }
+
+        /* ─────────────── ARC MODAL DIALOGS ─────────────── */
+        .arc-modal-backdrop {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0,0,0,0.45);
+            display: flex; align-items: flex-start; justify-content: center;
+            padding: 80px 24px 24px;
+            overflow-y: auto;
+            animation: modalFadeIn 0.2s ease;
+        }
+        .arc-modal-backdrop[hidden] { display: none; }
+        @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .arc-modal-card {
+            background: white; border-radius: 24px; padding: 24px;
+            width: 100%; max-width: 800px; position: relative;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.16);
+            animation: modalSlideUp 0.25s ease;
+        }
+        @keyframes modalSlideUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .arc-modal-close {
+            position: absolute; top: 20px; right: 20px; width: 32px; height: 32px;
+            background: none; border: none; cursor: pointer; color: var(--text-primary); padding: 4px;
+        }
+        .arc-modal-close svg { width: 100%; height: 100%; }
+
+        .arc-modal-title { font-size: 24px; font-weight: 500; line-height: 32px; color: var(--text-primary); margin-bottom: 4px; padding-right: 40px; }
+        .arc-modal-service { font-size: 15px; color: var(--text-secondary); margin-bottom: 20px; }
+
+        /* Modal radio list */
+        .modal-radio-group { border: none; display: flex; flex-direction: column; gap: 0; margin-bottom: 0; }
+        .modal-radio {
+            display: flex; align-items: center; gap: 16px; padding: 16px 0;
+            font-size: 16px; color: var(--text-primary); cursor: pointer;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        .modal-radio:last-child { border-bottom: none; }
+        .modal-radio input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .modal-radio-dot {
+            width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--text-tertiary);
+            flex-shrink: 0; position: relative; transition: border-color 0.15s;
+        }
+        .modal-radio:has(input:checked) .modal-radio-dot { border-color: var(--indigo-800); }
+        .modal-radio:has(input:checked) .modal-radio-dot::after {
+            content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--indigo-800);
+        }
+        .modal-radio:has(input:focus-visible) .modal-radio-dot { outline: 2px solid var(--indigo-800); outline-offset: 2px; }
+
+        .modal-divider { height: 1px; background: var(--border-neutral); margin: 16px 0; }
+
+        .modal-disclosure { margin-bottom: 0; }
+        .modal-disclosure summary {
+            list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            padding: 12px 0; font-size: 16px; font-weight: 500; color: var(--indigo-800);
+        }
+        .modal-disclosure summary::-webkit-details-marker { display: none; }
+        .modal-disclosure summary svg { width: 24px; height: 24px; color: var(--indigo-800); transition: transform 0.2s; flex-shrink: 0; }
+        .modal-disclosure[open] summary svg { transform: rotate(180deg); }
+        .modal-disclosure-body { padding: 0 0 12px 32px; font-size: 14px; line-height: 20px; color: var(--text-secondary); }
+
+        .arc-modal-footer { display: flex; justify-content: flex-end; padding-top: 8px; }
+
+        /* Diagnostics loading modal */
+        .arc-modal-diag-head { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+        .arc-modal-diag-head .arc-spinner { width: 28px; height: 28px; flex-shrink: 0; }
+        .arc-modal-diag-head .arc-modal-title { margin-bottom: 0; padding-right: 0; }
+        .arc-modal-diag-body { }
+        .diag-checking-label { font-size: 16px; font-weight: 500; margin-bottom: 16px; color: var(--text-primary); }
+        .diag-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+        .diag-item {
+            font-size: 16px; color: var(--text-primary); opacity: 0.4;
+            transition: opacity 0.8s ease-in-out; display: flex; align-items: center; gap: 10px;
+        }
+        .diag-item::before {
+            content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--indigo-800); flex-shrink: 0;
+        }
+        .diag-item.revealed { opacity: 1; }
+        .diag-support { font-size: 14px; line-height: 20px; color: var(--text-secondary); }
+        @media (prefers-reduced-motion: reduce) {
+            .diag-item { transition: none; }
+            .arc-modal-backdrop, .arc-modal-card { animation: none; }
+        }
+
+        /* ─────────────── REPORT-A-FAULT JOURNEY ─────────────── */
+        .visually-hidden {
+            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+            overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+        }
+        .journey-main { max-width: 760px; }
+        .journey-service-chip {
+            display: flex; align-items: center; gap: 10px; padding: 16px 20px;
+            background: var(--surface-neutral); border-radius: 12px; margin-bottom: 32px; font-size: 16px; color: var(--text-primary);
+        }
+        .journey-service-chip .row-icon { width: 24px; height: 24px; color: var(--indigo-800); flex-shrink: 0; }
+
+        .journey-panel { border: 1px solid var(--border-neutral); border-radius: 24px; padding: 32px; background: white; }
+
+        .journey-actions { display: flex; gap: 16px; justify-content: flex-start; flex-wrap: wrap; }
+        .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+
+        /* Duplicate info row */
+        .info-row { display: flex; gap: 12px; padding: 20px; background: var(--surface-neutral); border-radius: 12px; margin: 24px 0 32px; }
+        .info-icon { width: 24px; height: 24px; color: var(--indigo-800); flex-shrink: 0; }
+        .info-strong { font-size: 16px; color: var(--text-primary); margin-bottom: 6px; }
+        .info-muted { font-size: 14px; line-height: 20px; color: var(--text-secondary); }
+
+        /* ── Results page (matches Figma 5495:383557) ── */
+        .results-layout { max-width: 100%; display: block; }
+
+        /* Service identity block under the heading */
+        .results-service-info { font-size: 16px; line-height: 24px; color: var(--text-primary); margin-bottom: 0; }
+        .results-service-info .info-row { display: flex; gap: 8px; align-items: center; padding: 0; background: none; border-radius: 0; margin: 0; }
+        .results-service-info .info-label { font-weight: 400; }
+        .results-service-info .info-value { font-weight: 500; color: var(--text-secondary); }
+
+        /* ── Arc Alert component (replicating arc-Alert markup for plain HTML) ── */
+        .arc-alert {
+            display: flex; gap: 8px; align-items: flex-start;
+            padding: 16px 24px 20px 16px;
+            border-radius: 24px;   /* --alert-border-radius-m: bt-business 24px */
+            border: 1px solid;     /* --alert-border-width-s: bt-business 1px */
+        }
+        .arc-alert[data-status="error"]   { background: #FFE9EC; border-color: #DA020F; }
+        .arc-alert[data-status="success"] { background: #F0F8EF; border-color: #088003; }
+        .arc-alert[data-status="warning"] { background: #FEF6DE; border-color: #FFA200; }
+        .arc-alert[data-status="default"] { background: #F7F7F7; border-color: #D9D9D9; }
+        .arc-alert-icon { width: 24px; height: 24px; flex-shrink: 0; margin-top: 4px; color: #2A2A2A; }
+        .arc-alert-content { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 0; }
+        .arc-alert-heading { font-size: 20px; font-weight: 500; line-height: 28px; color: #2A2A2A; }
+        .arc-alert-description { font-size: 16px; line-height: 24px; color: #2A2A2A; max-width: 480px; }
+
+        /* Check results card (bordered list with dividers) */
+        .results-list {
+            border: 1px solid var(--border-neutral); border-radius: 16px;
+            overflow: hidden; margin-bottom: 0;
+        }
+        .result-item {
+            display: flex; align-items: center; gap: 16px; padding: 16px 20px;
+            border-bottom: 1px solid var(--border-neutral); background: white;
+        }
+        .result-item:last-child { border-bottom: none; }
+        .result-status-icon { width: 24px; height: 24px; flex-shrink: 0; }
+        .result-item.no-issue .result-status-icon { color: #036C01; }
+        .result-item.issue .result-status-icon { color: #DA020F; }
+        .result-item.unavailable .result-status-icon { color: var(--text-tertiary); }
+        .result-body { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .result-name { font-size: 16px; font-weight: 500; line-height: 24px; color: var(--text-primary); }
+        .result-detail { font-size: 14px; line-height: 20px; color: var(--text-secondary); }
+        .result-tag {
+            font-size: 12px; font-weight: 500; line-height: 12px;
+            padding: 6px 8px; height: 24px;
+            border-radius: 1000px; white-space: nowrap; align-self: center;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .result-item.no-issue .result-tag { background: #E6F4E5; color: #036C01; }
+        .result-item.issue .result-tag { background: #FFE9EC; color: #DA020F; }
+        .result-item.unavailable .result-tag { background: var(--surface-neutral); color: var(--text-secondary); }
+        @media (max-width: 635px) { .result-item { flex-wrap: wrap; } }
+
+        /* Action buttons row */
+        .results-actions { align-items: center; }
+        .results-actions .btn-link {
+            background: none; border: none; color: var(--indigo-800); font-family: 'BT Curve', sans-serif;
+            font-size: 16px; font-weight: 500; cursor: pointer; padding: 12px 8px;
+        }
+        .results-actions .btn-link:hover { color: var(--indigo-900); text-decoration: underline; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .arc-modal-backdrop, .arc-modal-card { animation: none; }
+        }
+
+        .journey-view { display: none; }
+
+        /* ─────────────── FLOW VISIBILITY ─────────────── */
+        #loadingView { display: block; }
+        #resultsView { display: none; }
+        #tafView { display: none; }
+        .results-visible #loadingView { display: none; }
+        .results-visible #resultsView { display: block; }
+        /* TAF overrides everything else once active */
+        .results-visible.taf-visible #resultsView { display: none; }
+        .taf-visible #loadingView { display: none; }
+        .taf-visible #tafView { display: block; }
+
+        /* Journey screens override everything when a journey screen is active */
+        .journey-active #loadingView,
+        .journey-active #resultsView,
+        .journey-active #tafView { display: none !important; }
+        .journey-active .journey-view.active { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Reusable BT roundel logo (hidden SVG symbol) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <symbol id="bt-logo" viewBox="0 0 48 48">
+            <circle cx="24" cy="24" r="23" fill="none" stroke="#5514B4" stroke-width="2"/>
+            <path fill="#5514B4" d="M14.2 14.6h6.9c3 0 4.8 1.4 4.8 3.9 0 1.6-.8 2.7-2.2 3.2 1.8.4 2.9 1.7 2.9 3.6 0 2.7-2 4.2-5.2 4.2h-7.2V14.6Zm6.4 6.1c1.2 0 1.9-.6 1.9-1.6s-.7-1.5-1.9-1.5h-2.9v3.1h2.9Zm.3 6.1c1.3 0 2-.6 2-1.7s-.7-1.6-2-1.6h-3.2v3.3h3.2Z"/>
+            <path fill="#5514B4" d="M27.3 14.6h10.5v2.9h-3.6v12h-3.4v-12h-3.5v-2.9Z"/>
+        </symbol>
+        <!-- Arc BT Spanner (BtIconSpanner) -->
+        <symbol id="icon-spanner" viewBox="0 0 24 24">
+            <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M20.3 5.3a4.6 4.6 0 0 1-6 6L5.9 19.7a1.8 1.8 0 0 1-2.6-2.6l8.4-8.4a4.6 4.6 0 0 1 6-6l-2.9 2.9a1.3 1.3 0 0 0 0 1.9l1.1 1.1a1.3 1.3 0 0 0 1.9 0l2.5-2.3Z"/>
+        </symbol>
+    </svg>
+
+    <div class="page" id="app">
+        <!-- ═══ ARC NAVIGATION HEADER ═══ -->
+        <header class="arc-nav">
+            <div class="arc-nav-inner">
+                <div class="arc-nav-logo"><svg><use href="#bt-logo"/></svg></div>
+                <nav class="arc-nav-items">
+                    <span class="arc-nav-item">Dashboard</span>
+                    <span class="arc-nav-item">Billing
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                    </span>
+                    <span class="arc-nav-item">Orders</span>
+                    <span class="arc-nav-item active">Faults</span>
+                    <span class="arc-nav-item">Products &amp; Services
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                    </span>
+                </nav>
+                <div class="arc-nav-right">
+                    <span class="arc-nav-item">Help
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                    </span>
+                    <span class="arc-nav-item">One Braham
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                    </span>
+                    <div class="arc-nav-avatar">JD</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ═══════════════════ LOADING VIEW ═══════════════════ -->
+        <div id="loadingView">
+            <div class="container bleed">
+                <div class="page-header">
+                    <h1>Checking faults</h1>
+                    <p>We're running initial checks on your services. This should take less than a minute.</p>
+                </div>
+
+                <main class="main">
+                    <section class="loading-section" aria-label="Diagnostic checks in progress">
+                        <div class="carousel-viewport">
+                            <div class="pulse-circle" aria-hidden="true"></div>
+                            <div class="carousel-track" id="carouselTrack">
+                                <div class="carousel-slide"><div class="lottie-holder" id="anim-map"></div></div>
+                                <div class="carousel-slide"><div class="lottie-holder lottie-lg" id="anim-building"></div></div>
+                                <div class="carousel-slide"><div class="lottie-holder lottie-lg" id="anim-router"></div></div>
+                            </div>
+                        </div>
+
+                        <div class="loading-caption">
+                            <div class="arc-spinner" role="status" aria-label="Loading"></div>
+                            <div class="caption-text" aria-live="polite">
+                                <div class="caption-item active" data-phase="0">
+                                    <div class="caption-title">Checking for local outages</div>
+                                    <div class="caption-desc">We're checking if a local issue is affecting your connection.</div>
+                                </div>
+                                <div class="caption-item" data-phase="1">
+                                    <div class="caption-title">Checking your services</div>
+                                    <div class="caption-desc">Testing your connection to make sure it's working right and checking for open issues.</div>
+                                </div>
+                                <div class="caption-item" data-phase="2">
+                                    <div class="caption-title">Checking your devices</div>
+                                    <div class="caption-desc">Checking your connected devices for issues.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="switcher-row">
+                        <div class="arc-switcher" role="tablist" aria-label="Service view">
+                            <span class="switcher-pill" aria-hidden="true"></span>
+                            <button class="switcher-tab active" role="tab" data-view="all" aria-selected="true">All your services</button>
+                            <button class="switcher-tab" role="tab" data-view="track" aria-selected="false">Track a fault</button>
+                        </div>
+                    </div>
+
+                    <section class="table-section">
+                        <div class="table-header">
+                            <div class="table-header-text">
+                                <h2>All your services</h2>
+                                <p>Experiencing a fault on a service our initial checks haven't picked up on? Report a fault here and we'll look into it for you.</p>
+                            </div>
+                            <button class="btn-secondary">Get started
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                        <div class="controls-row">
+                            <div class="input-field">
+                                <span class="placeholder">Search Service ID or Address</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            </div>
+                            <div class="input-field">
+                                <span>All products</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+                        </div>
+                        <div class="data-table">
+                            <div class="table-scroll"><div class="table-grid" id="loadingTableBody"></div></div>
+                            <div class="table-footer">
+                                <div class="table-footer-text">Showing <strong>10</strong> out of <strong>199 items</strong></div>
+                                <div class="pagination">
+                                    <div class="page-arrow disabled"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+                                    <div class="page-dot active">1</div><div class="page-dot">2</div><div class="page-dot">3</div>
+                                    <div class="page-dot">4</div><div class="page-dot">5</div><div class="page-dot dots">...</div><div class="page-dot">20</div>
+                                    <div class="page-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+
+        <!-- ═══════════════════ RESULTS VIEW ═══════════════════ -->
+        <div id="resultsView">
+            <div class="container bleed">
+                <div class="page-header">
+                    <h1>Checks complete</h1>
+                </div>
+
+                <main class="main">
+                    <section class="cards-section" aria-label="Faults found">
+                        <h2 class="section-title">Faults found</h2>
+                        <div class="cards-grid">
+                            <!-- Card 1 -->
+                            <div class="fault-card card-red">
+                                <div class="card-service-row">
+                                    <div class="card-icon-circle">
+                                        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="20" r="16"/><path d="M4 15h32"/><path d="M4 25h32"/><path d="M20 4a24 24 0 0 1 6.5 16A24 24 0 0 1 20 36a24 24 0 0 1-6.5-16A24 24 0 0 1 20 4Z"/></svg>
+                                    </div>
+                                    <div class="card-service-info">
+                                        <span class="card-service-name">BT Broadband</span>
+                                        <span class="card-service-id">Service xx-111</span>
+                                    </div>
+                                </div>
+                                <div class="card-location">
+                                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M26 13c0 8-10 16-10 16S6 21 6 13a10 10 0 0 1 20 0Z"/><circle cx="16" cy="13" r="3.5"/></svg>
+                                    <span class="card-location-text">12 Kingscliffe Road, Grantham Lincs, NG31 8ET</span>
+                                </div>
+                                <div class="card-description">
+                                    <p>We're experiencing an issue with our network that might be impacting your service(s). We're working hard to fix this.</p>
+                                    <div class="card-estimate">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                        <span>Estimated fix date: 11/08/2025</span>
+                                    </div>
+                                </div>
+                                <button class="btn-primary btn-block btn-noclick">Report something else</button>
+                            </div>
+
+                            <!-- Card 2 -->
+                            <div class="fault-card card-red">
+                                <div class="card-service-row">
+                                    <div class="card-icon-circle">
+                                        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="20" r="16"/><path d="M4 15h32"/><path d="M4 25h32"/><path d="M20 4a24 24 0 0 1 6.5 16A24 24 0 0 1 20 36a24 24 0 0 1-6.5-16A24 24 0 0 1 20 4Z"/></svg>
+                                    </div>
+                                    <div class="card-service-info">
+                                        <span class="card-service-name">BT Broadband</span>
+                                        <span class="card-service-id">Service xx-111</span>
+                                    </div>
+                                </div>
+                                <div class="card-location">
+                                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M26 13c0 8-10 16-10 16S6 21 6 13a10 10 0 0 1 20 0Z"/><circle cx="16" cy="13" r="3.5"/></svg>
+                                    <span class="card-location-text">12 Kingscliffe Road, Grantham Lincs, NG31 8ET</span>
+                                </div>
+                                <div class="card-description">
+                                    <p>Our checks have found that this service is offline, you need to run further checks to fix this issue.</p>
+                                </div>
+                                <button class="btn-primary btn-block btn-noclick">
+                                    <svg aria-hidden="true"><use href="#icon-spanner"/></svg>
+                                    Start fixing
+                                </button>
+                            </div>
+
+                            <!-- Card 3 -->
+                            <div class="fault-card card-amber">
+                                <div class="amber-banner">
+                                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.575 3.494 1.326 15.747a1.667 1.667 0 0 0 1.425 2.503h14.498a1.667 1.667 0 0 0 1.425-2.503L11.425 3.494a1.667 1.667 0 0 0-2.85 0Z"/><path d="M10 7.5v3.333"/><path d="M10 14.167h.008"/></svg>
+                                    Open fault
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-service-row">
+                                        <div class="card-icon-circle">
+                                            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="20" r="16"/><path d="M4 15h32"/><path d="M4 25h32"/><path d="M20 4a24 24 0 0 1 6.5 16A24 24 0 0 1 20 36a24 24 0 0 1-6.5-16A24 24 0 0 1 20 4Z"/></svg>
+                                        </div>
+                                        <div class="card-service-info">
+                                            <span class="card-service-name">BT Broadband</span>
+                                            <span class="card-service-id">Service xx-111</span>
+                                        </div>
+                                        <span class="action-badge">Action needed</span>
+                                    </div>
+                                    <div class="card-location">
+                                        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M26 13c0 8-10 16-10 16S6 21 6 13a10 10 0 0 1 20 0Z"/><circle cx="16" cy="13" r="3.5"/></svg>
+                                        <span class="card-location-text">12 Kingscliffe Road, Grantham Lincs, NG31 8ET</span>
+                                    </div>
+                                    <div class="card-description">
+                                        <p>This fault requires your action in order to progress it.</p>
+                                    </div>
+                                    <button class="btn-primary btn-block btn-noclick">Take action</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="switcher-row">
+                        <div class="arc-switcher" role="tablist" aria-label="Service view">
+                            <span class="switcher-pill" aria-hidden="true"></span>
+                            <button class="switcher-tab active" role="tab" data-view="all" aria-selected="true">All services</button>
+                            <button class="switcher-tab" role="tab" data-view="faults" aria-selected="false">Faults</button>
+                        </div>
+                    </div>
+
+                    <section class="table-section">
+                        <div class="table-header">
+                            <div class="table-header-text">
+                                <h2>All your services</h2>
+                                <p>Experiencing a fault on a service our initial checks haven't picked up on? Report a fault here and we'll look into it for you.</p>
+                            </div>
+                            <button class="btn-secondary">Get started
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                        <div class="controls-row">
+                            <div class="input-field">
+                                <span class="placeholder">Search Service ID or Address</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            </div>
+                            <div class="input-field">
+                                <span>All products</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+                        </div>
+                        <div class="data-table">
+                            <div class="table-scroll"><div class="table-grid" id="resultsTableBody"></div></div>
+                            <div class="table-footer">
+                                <div class="table-footer-text" id="resultsFooterText">Showing <strong>10</strong> out of <strong>199 items</strong></div>
+                                <div class="pagination">
+                                    <div class="page-arrow disabled"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+                                    <div class="page-dot active">1</div><div class="page-dot">2</div><div class="page-dot">3</div>
+                                    <div class="page-dot">4</div><div class="page-dot">5</div><div class="page-dot dots">...</div><div class="page-dot">20</div>
+                                    <div class="page-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+
+        <!-- ═══════════════════ TRACK A FAULT VIEW ═══════════════════ -->
+        <div id="tafView">
+            <div class="container bleed">
+                <!-- Breadcrumbs -->
+                <nav class="breadcrumbs" aria-label="Breadcrumb">
+                    <span class="crumb js-taf-back">Dashboard</span>
+                    <svg class="crumb-sep" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    <span class="crumb js-taf-back">Faults</span>
+                    <svg class="crumb-sep" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    <span class="crumb current">Track a fault</span>
+                </nav>
+
+                <div class="page-header taf-header">
+                    <h1>Fault progress</h1>
+                    <p class="taf-subhead">
+                        <span>Fault reference: <strong>1-108617949</strong></span>
+                        <span class="sep">|</span>
+                        <span>Service ID: <strong>1-108617949</strong></span>
+                        <span class="sep">|</span>
+                        <span>Product: <strong>Broadband</strong></span>
+                    </p>
+                </div>
+
+                <main class="main">
+                    <!-- Two-column top area -->
+                    <div class="taf-grid">
+                        <!-- LEFT: progress card -->
+                        <div class="taf-progress-card">
+                            <div class="taf-progress-top">
+                                <span class="taf-estimate">Estimated fix date: <strong>Monday 18th May</strong></span>
+                                <span class="action-badge">Action needed</span>
+                            </div>
+                            <div class="taf-update-box">
+                                <div class="taf-update-head">
+                                    <span class="taf-update-title">No update currently available</span>
+                                    <span class="taf-update-time">16 Jul, 10:25 AM</span>
+                                </div>
+                                <p class="taf-update-body">There aren't any updates on your fault right now. As soon as there is new information, you'll find it here and we'll keep you informed.</p>
+                            </div>
+
+                            <!-- Progress stepper -->
+                            <ol class="progress-stepper">
+                                <li class="step active">
+                                    <span class="step-marker"></span>
+                                    <div class="step-content">
+                                        <span class="step-title">Fault report in progress</span>
+                                        <span class="step-date">08/05/2026</span>
+                                        <span class="step-desc">Complete your fault report so we can start investigating the issue.</span>
+                                    </div>
+                                </li>
+                                <li class="step">
+                                    <span class="step-marker"></span>
+                                    <div class="step-content">
+                                        <span class="step-title">Fault opened</span>
+                                        <span class="step-desc">We're investigating your fault.</span>
+                                    </div>
+                                </li>
+                                <li class="step">
+                                    <span class="step-marker"></span>
+                                    <div class="step-content">
+                                        <span class="step-title">We've identified a fix</span>
+                                        <span class="step-desc">We're applying the fix and monitoring progress to restore your service.</span>
+                                    </div>
+                                </li>
+                                <li class="step">
+                                    <span class="step-marker"></span>
+                                    <div class="step-content">
+                                        <span class="step-title">Fault fixed</span>
+                                        <span class="step-desc">Your fault has been fixed. Check your service and let us know if you still need help.</span>
+                                    </div>
+                                </li>
+                                <li class="step last">
+                                    <span class="step-marker"></span>
+                                    <div class="step-content">
+                                        <span class="step-title">Fault closed</span>
+                                        <span class="step-date">18/05/2026 (est.)</span>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <!-- RIGHT: alert + details -->
+                        <div class="taf-side">
+                            <div class="taf-alert-card">
+                                <div class="taf-alert-head">
+                                    <svg class="taf-alert-icon" viewBox="0 0 24 24" fill="none" stroke="#FFA200" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                                    <span class="taf-alert-title">Action needed</span>
+                                </div>
+                                <p class="taf-alert-body">You've started reporting a fault but haven't finished yet. Please continue your report so we can start fixing the issue.</p>
+                                <button class="btn-primary btn-block btn-noclick">Resume reporting
+                                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="m8 7 4 3-4 3Z"/></svg>
+                                </button>
+                                <button class="btn-secondary btn-block btn-noclick" style="margin-top:12px;">Cancel fault</button>
+                            </div>
+
+                            <div class="taf-details-card">
+                                <h3 class="taf-details-title">Your details</h3>
+                                <div class="taf-detail-block">
+                                    <div class="taf-detail-row">
+                                        <span class="taf-detail-label">Site address:</span>
+                                        <svg class="taf-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                                    </div>
+                                    <p class="taf-detail-value">1 The Street,<br>Westminister, London<br>SW1 1RY</p>
+                                </div>
+                                <div class="taf-detail-block">
+                                    <div class="taf-detail-row">
+                                        <span class="taf-detail-label">Contact details:</span>
+                                        <svg class="taf-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                                    </div>
+                                    <p class="taf-detail-value">Name: <strong>Duke Alexa</strong><br>Phone: <strong>01283424873</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Help & support -->
+                    <section class="taf-section">
+                        <div class="taf-faq-head">
+                            <div>
+                                <h2 class="section-title" style="margin-bottom:4px;">Help &amp; support</h2>
+                                <p class="taf-faq-sub">Learn more about the online fault process</p>
+                            </div>
+                        </div>
+                        <div class="faq-list">
+                            <details class="faq-item"><summary>How do I track the progress of a fault?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary><div class="faq-body">You can track your fault anytime from this page. We'll update the progress tracker as your fault moves through each stage, and notify you when action is needed.</div></details>
+                            <details class="faq-item"><summary>What does 'Action needed' mean?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary><div class="faq-body">'Action needed' means we need something from you before we can continue — for example, finishing your fault report or confirming an appointment.</div></details>
+                            <details class="faq-item"><summary>What happens if my service still isn't working but the fault has been closed?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary><div class="faq-body">If your service still isn't working after a fault is closed, you can reopen it or report a new fault and we'll investigate again.</div></details>
+                        </div>
+                    </section>
+
+                    <!-- Track a different fault -->
+                    <section class="taf-section">
+                        <h2 class="section-title">Track a different fault</h2>
+                        <div class="data-table">
+                            <div class="table-scroll"><div class="taf-related-grid" id="tafRelatedBody"></div></div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+
+            <!-- You might be interested in -->
+            <section class="taf-interested">
+                <div class="container bleed">
+                    <h2 class="section-title" style="text-align:center;">You might be interested in</h2>
+                    <div class="interested-grid">
+                        <div class="interested-card">
+                            <svg class="interested-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10h18"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
+                            <h3>Billing</h3>
+                            <p>Find out what to expect from your first BT Business bill, and how to manage your bill online.</p>
+                        </div>
+                        <div class="interested-card">
+                            <svg class="interested-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                            <h3>Help and support</h3>
+                            <p>Need more help with your product or service? View our step-by-step guides, FAQs and video tutorials.</p>
+                        </div>
+                        <div class="interested-card">
+                            <svg class="interested-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a4 4 0 0 0-5.6 5.6l-5.4 5.4a2 2 0 0 0 2.8 2.8l5.4-5.4a4 4 0 0 0 5.6-5.6l-2.5 2.5-2.1-2.1 2.5-2.5Z"/></svg>
+                            <h3>Fault and repairs</h3>
+                            <p>Check your service performance, or fix or report your service issues online.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ═══════════════════ REPORT-A-FAULT JOURNEY ═══════════════════ -->
+
+        <!-- ═══ SYMPTOM SELECTION MODAL ═══ -->
+        <div id="symptomModal" class="arc-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="symptomHeading" hidden>
+            <div class="arc-modal-card">
+                <button class="arc-modal-close js-close-symptom" aria-label="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+                <h2 id="symptomHeading" tabindex="-1" class="arc-modal-title">Select the type of broadband issue you're having</h2>
+                <p class="arc-modal-service">Service ID: <strong class="js-service-id">XXX</strong></p>
+
+                <form id="symptomForm">
+                    <fieldset class="modal-radio-group">
+                        <legend class="visually-hidden">Select the symptom you're experiencing</legend>
+                        <label class="modal-radio"><input type="radio" name="symptom" value="No connection"><span class="modal-radio-dot"></span> No connection</label>
+                        <label class="modal-radio"><input type="radio" name="symptom" value="Slow speeds"><span class="modal-radio-dot"></span> Slow speeds</label>
+                        <label class="modal-radio"><input type="radio" name="symptom" value="Connection drops"><span class="modal-radio-dot"></span> Connection drops</label>
+                        <label class="modal-radio"><input type="radio" name="symptom" value="No access to websites"><span class="modal-radio-dot"></span> No access to websites</label>
+                        <label class="modal-radio"><input type="radio" name="symptom" value="Other products"><span class="modal-radio-dot"></span> Other products</label>
+                        <label class="modal-radio"><input type="radio" name="symptom" value="Email issues"><span class="modal-radio-dot"></span> Email issues</label>
+                    </fieldset>
+
+                    <div class="modal-divider"></div>
+                    <details class="modal-disclosure">
+                        <summary>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                            <span class="modal-disclosure-label">Guidance on different issues</span>
+                        </summary>
+                        <div class="modal-disclosure-body">
+                            <p>If your issue doesn't match the options above, select "Other products" and we'll guide you through the next steps.</p>
+                        </div>
+                    </details>
+                    <div class="modal-divider"></div>
+
+                    <div class="arc-modal-footer">
+                        <button type="submit" class="btn-primary" id="symptomContinue" disabled>Run test</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ═══ DIAGNOSTICS LOADING MODAL ═══ -->
+        <div id="diagLoadingModal" class="arc-modal-backdrop arc-modal-no-close" role="dialog" aria-modal="true" aria-labelledby="diagHeading" hidden>
+            <div class="arc-modal-card">
+                <div class="arc-modal-diag-head">
+                    <div class="arc-spinner" role="status" aria-label="Running checks"></div>
+                    <h2 id="diagHeading" tabindex="-1" class="arc-modal-title">We're running further checks</h2>
+                </div>
+                <div class="arc-modal-diag-body" aria-live="polite">
+                    <p class="diag-checking-label">We're checking:</p>
+                    <ul class="diag-list" id="diagList">
+                        <li class="diag-item" data-step="0">Major service outages...</li>
+                        <li class="diag-item" data-step="1">Your broadband connection...</li>
+                        <li class="diag-item" data-step="2">Your internal wiring...</li>
+                        <li class="diag-item" data-step="3">The external network...</li>
+                    </ul>
+                    <div class="modal-divider"></div>
+                    <p class="diag-support">This can take a couple of minutes. Please keep this page open while we complete the checks.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: DUPLICATE TEST -->
+        <div id="duplicateView" class="journey-view">
+            <div class="container bleed">
+                <nav class="breadcrumbs" aria-label="Breadcrumb">
+                    <span class="crumb js-journey-exit">Faults</span>
+                    <svg class="crumb-sep" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    <span class="crumb current">Recent test found</span>
+                </nav>
+                <div class="page-header taf-header">
+                    <h1 tabindex="-1" id="duplicateHeading">You've already run a test on this service</h1>
+                </div>
+                <main class="main journey-main">
+                    <div class="journey-panel">
+                        <div class="journey-service-chip">
+                            <svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/><path d="M3.6 9h16.8"/><path d="M3.6 15h16.8"/><path d="M12 3a15 15 0 0 1 4 9 15 15 0 0 1-4 9 15 15 0 0 1-4-9 15 15 0 0 1 4-9Z"/></svg>
+                            <span class="chip-text"><strong class="js-service-name">BT Broadband</strong> &middot; <span class="js-service-id">01168222981</span></span>
+                        </div>
+                        <div class="info-row">
+                            <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+                            <div>
+                                <p class="info-strong">Previous test completed: <strong id="duplicateWhen">Today at 09:42</strong></p>
+                                <p class="info-muted">We ran a full set of checks on this service recently. To avoid putting extra load on the line, we don't run another test straight away — the earlier result is still valid.</p>
+                            </div>
+                        </div>
+                        <div class="journey-actions">
+                            <button type="button" class="btn-secondary js-journey-exit">Back to Repairs</button>
+                            <button type="button" class="btn-primary js-view-existing-result">View existing result
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: TEST RESULTS -->
+        <div id="resultsDiagView" class="journey-view">
+            <div class="container bleed" style="padding-top:40px; padding-bottom:64px;">
+                <nav class="breadcrumbs" aria-label="Breadcrumb" style="padding-top:0; margin-bottom:0;">
+                    <span class="crumb" style="text-decoration:underline; cursor:pointer;" onclick="exitJourney()">Dashboard</span>
+                    <svg class="crumb-sep" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    <span class="crumb current">Faults</span>
+                </nav>
+
+                <!-- Heading + service info -->
+                <div style="display:flex; flex-direction:column; gap:16px; margin-top:32px; margin-bottom:32px;">
+                    <h1 tabindex="-1" id="diagResultsHeading" style="font-size:40px; font-weight:500; line-height:48px; color:var(--text-primary); text-transform:none; letter-spacing:0;">Your test results</h1>
+                    <div class="results-service-info" id="diagServiceInfo">
+                        <div class="info-row"><span class="info-label">Service ID:</span> <span class="info-value js-diag-service-id">01168222981</span></div>
+                        <div class="info-row"><span class="info-label">Location:</span> <span class="info-value js-diag-service-addr">12 Kingscliffe Road, NG31 8ET</span></div>
+                    </div>
+                </div>
+
+                <main class="main results-layout" style="display:flex; flex-direction:column; gap:16px; padding-bottom:0;">
+                    <div class="results-content" aria-live="polite" style="display:flex; flex-direction:column; gap:16px;">
+                        <!-- Arc Alert component -->
+                        <div class="arc-alert" id="outcomeBanner" role="alert">
+                            <svg class="arc-alert-icon" id="outcomeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></svg>
+                            <div class="arc-alert-content">
+                                <h3 class="arc-alert-heading" id="outcomeTitle"></h3>
+                                <p class="arc-alert-description" id="outcomeText"></p>
+                            </div>
+                        </div>
+
+                        <!-- Check results list (bordered card with dividers) -->
+                        <div class="results-list" id="diagResultsList"></div>
+                    </div>
+
+                    <!-- Next actions -->
+                    <div class="journey-actions results-actions" id="diagResultActions" style="margin-top:16px;"></div>
+                </main>
+            </div>
+        </div>
+
+        <!-- ═══ ARC SITE FOOTER ═══ -->
+        <footer class="arc-footer">
+            <div class="arc-footer-inner">
+                <div class="arc-footer-tagline">All business. No drama.</div>
+                <div class="arc-footer-cols">
+                    <div class="arc-footer-col">
+                        <h4>Explore BT</h4>
+                        <ul><li>For the home</li><li>For Wholesale</li><li>For global businesses</li><li>BT Group</li></ul>
+                    </div>
+                    <div class="arc-footer-col">
+                        <h4>Find your business</h4>
+                        <ul><li>Small and medium business</li><li>Corporate</li><li>Public sector</li></ul>
+                    </div>
+                    <div class="arc-footer-col">
+                        <h4>Useful links</h4>
+                        <ul><li>Help and support</li><li>BT Local Business</li><li>Contact BT</li><li>Sitemap</li></ul>
+                    </div>
+                    <div class="arc-footer-col">
+                        <h4>Follow us</h4>
+                        <ul>
+                            <li>BT Business Community</li>
+                            <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.6h.05c.53-1 1.82-2.05 3.75-2.05 4 0 4.75 2.6 4.75 6V21H18.5v-5.3c0-1.26-.02-2.9-1.76-2.9-1.76 0-2.03 1.37-2.03 2.8V21H10V9Z"/></svg> Linkedin</li>
+                            <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.1 8.1L23 22h-6.6l-5.2-6.8L5.3 22H2l7.6-8.7L1.5 2h6.8l4.7 6.2L18.9 2Zm-1.2 18h1.8L7.2 3.8H5.3L17.7 20Z"/></svg> Twitter</li>
+                            <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.5a3 3 0 0 0-2.1-2.1C19 4.9 12 4.9 12 4.9s-7 0-8.9.5A3 3 0 0 0 1 7.5 31 31 0 0 0 .5 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.5 31 31 0 0 0-.5-4.5ZM9.8 15.3V8.7l5.7 3.3-5.7 3.3Z"/></svg> YouTube</li>
+                            <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.1.4.3 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.1-1 .3-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4a3.7 3.7 0 0 1-1.4-.9 3.7 3.7 0 0 1-.9-1.4c-.1-.4-.3-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.1 1-.3 2.2-.4C8.4 2.2 8.8 2.2 12 2.2Zm0 4.9a4.9 4.9 0 1 0 0 9.8 4.9 4.9 0 0 0 0-9.8Zm0 8.1a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4Zm6.2-8.3a1.1 1.1 0 1 1-2.3 0 1.1 1.1 0 0 1 2.3 0Z"/></svg> Instagram</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="arc-footer-bottom">
+                <div class="arc-footer-legal">
+                    <span>Cookies</span><span>Terms of use</span><span>Code of practice</span><span>Privacy policy</span><span>Accessibility</span>
+                </div>
+                <div class="arc-footer-copy">
+                    &copy; BT 2022
+                    <div class="mini-logo"><svg><use href="#bt-logo"/></svg></div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ═══════════ DATA ═══════════
+        const broadbandIcon = '<svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/><path d="M3.6 9h16.8"/><path d="M3.6 15h16.8"/><path d="M12 3a15 15 0 0 1 4 9 15 15 0 0 1-4 9 15 15 0 0 1-4-9 15 15 0 0 1 4-9Z"/></svg>';
+        const phoneIcon = '<svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>';
+        const locIcon = '<svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
+
+        const loadingRows = [
+            { type:'Broadband', id:'01168222981', addr:'12 Kingscliffe Road, NG31 8ET' },
+            { type:'Broadband', id:'01168222982', addr:'7 Rosewood Lane, NW1 8JR' },
+            { type:'Broadband', id:'01168222983', addr:'3 Willowbank Avenue, EH10 4SG' },
+            { type:'Broadband', id:'01168222984', addr:'48 Meadow Crescent, LS6 2AB' },
+            { type:'Broadband', id:'01168222985', addr:'91 Seaview Terrace, BN2 1RJ' },
+            { type:'Phone line', id:'01168222972', addr:'48 Meadow Crescent, LS6 2AB' },
+            { type:'Phone line', id:'01168222973', addr:'15 Churchfield Drive, BT7 3LP' },
+            { type:'Phone line', id:'01168222974', addr:'29 Oakridge Gardens, M20 3GH' },
+            { type:'Phone line', id:'01168222975', addr:'48 Meadow Crescent, LS6 2AB' },
+            { type:'Phone line', id:'01168222976', addr:'64 Ashford Close, BS8 1PL' }
+        ];
+        const allServicesRows = [
+            { type:'Broadband', id:'01168222981', addr:'12 Kingscliffe Road, NG31 8ET', status:'No fault detected' },
+            { type:'Broadband', id:'01168222981', addr:'12 Kingscliffe Road, NG31 8ET', status:'No fault detected' },
+            { type:'Broadband', id:'01168222981', addr:'12 Kingscliffe Road, NG31 8ET', status:'No fault detected' },
+            { type:'Broadband', id:'01168222981', addr:'12 Kingscliffe Road, NG31 8ET', status:'No fault detected' },
+            { type:'Broadband', id:'01168222981', addr:'12 Kingscliffe Road, NG31 8ET', status:'No fault detected' },
+            { type:'Phone line', id:'01168222981', addr:'48 Meadow Crescent, LS6 2AB', status:'No fault detected' },
+            { type:'Phone line', id:'01168222981', addr:'48 Meadow Crescent, LS6 2AB', status:'No fault detected' },
+            { type:'Phone line', id:'01168222981', addr:'48 Meadow Crescent, LS6 2AB', status:'No fault detected' },
+            { type:'Phone line', id:'01168222981', addr:'48 Meadow Crescent, LS6 2AB', status:'No fault detected' },
+            { type:'Phone line', id:'01168222981', addr:'48 Meadow Crescent, LS6 2AB', status:'No fault detected' }
+        ];
+        const faultsRows = [
+            { type:'Broadband', id:'01168222981', addr:'12 Kingscliffe Road, NG31 8ET', status:'Open fault' },
+            { type:'Broadband', id:'01168222981', addr:'12 Kingscliffe Road, NG31 8ET', status:'Open fault' },
+            { type:'Broadband', id:'01168222981', addr:'12 Kingscliffe Road, NG31 8ET', status:'Action needed' }
+        ];
+
+        function iconFor(type) { return type === 'Broadband' ? broadbandIcon : phoneIcon; }
+        function statusBadge(status) {
+            if (!status) return '<span class="cell-empty">-</span>';
+            if (status === 'No fault detected') return '<span class="status-badge success">No fault detected</span>';
+            return '<span class="status-badge pending">' + status + '</span>';
+        }
+        function renderRows(container, rows, opts) {
+            opts = opts || {};
+            container.innerHTML = '';
+            const header = document.createElement('div');
+            header.className = 'grid-header';
+            const sortSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>';
+            header.innerHTML =
+                '<div class="cell">Product' + sortSvg + '</div>' +
+                '<div class="cell">Service ID' + sortSvg + '</div>' +
+                '<div class="cell">Address' + sortSvg + '</div>' +
+                '<div class="cell">Status' + sortSvg + '</div>' +
+                '<div class="cell">Actions</div>';
+            container.appendChild(header);
+            rows.forEach(function(r) {
+                const row = document.createElement('div');
+                row.className = 'grid-row';
+                var action;
+                if (opts.showActions === false) {
+                    action = '<span class="cell-empty">-</span>';
+                } else if (opts.ctaMode === 'track') {
+                    // Track-a-fault view → CTA becomes "View progress" and opens the TAF page
+                    action = '<button class="btn-primary btn-sm js-view-progress">View progress</button>';
+                } else {
+                    action = '<button class="btn-secondary btn-sm js-report-fault">Report a fault</button>';
+                }
+                row.innerHTML =
+                    '<div class="cell">' + iconFor(r.type) + r.type + '</div>' +
+                    '<div class="cell">' + r.id + '</div>' +
+                    '<div class="cell">' + locIcon + r.addr + '</div>' +
+                    '<div class="cell">' + statusBadge(r.status) + '</div>' +
+                    '<div class="cell">' + action + '</div>';
+                container.appendChild(row);
+            });
+            // Wire up any "View progress" buttons to open the TAF page
+            container.querySelectorAll('.js-view-progress').forEach(function(btn) {
+                btn.addEventListener('click', openTafView);
+            });
+            // Wire up "Report a fault" buttons to start the diagnostics journey (broadband only)
+            container.querySelectorAll('.js-report-fault').forEach(function(btn, i) {
+                btn.addEventListener('click', function() {
+                    var r = rows[i];
+                    startReportFault({ product: r.type, id: r.id, addr: r.addr });
+                });
+            });
+        }
+
+        renderRows(document.getElementById('loadingTableBody'), loadingRows, { showActions:false });
+        renderRows(document.getElementById('resultsTableBody'), allServicesRows);
+
+        // ═══════════ CONTENT SWITCHER (sliding pill) ═══════════
+        function positionPill(switcherEl, activeTab) {
+            const pill = switcherEl.querySelector('.switcher-pill');
+            if (!pill || !activeTab) return;
+            // Offset relative to the switcher's padding box
+            pill.style.width = activeTab.offsetWidth + 'px';
+            pill.style.transform = 'translateX(' + (activeTab.offsetLeft - 4) + 'px)';
+        }
+        function wireSwitcher(switcherEl, onChange) {
+            const tabs = switcherEl.querySelectorAll('.switcher-tab');
+            const active = switcherEl.querySelector('.switcher-tab.active');
+            positionPill(switcherEl, active);
+            tabs.forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(function(t) { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+                    tab.classList.add('active');
+                    tab.setAttribute('aria-selected','true');
+                    positionPill(switcherEl, tab);
+                    if (onChange) onChange(tab.dataset.view);
+                });
+            });
+            return switcherEl;
+        }
+
+        const loadingSwitcher = wireSwitcher(document.querySelector('#loadingView .arc-switcher'), function(){});
+        const resultsFooter = document.getElementById('resultsFooterText');
+        const resultsSwitcher = wireSwitcher(document.querySelector('#resultsView .arc-switcher'), function(view) {
+            if (view === 'faults') {
+                // Faults / Track-a-fault view → "View progress" CTAs
+                renderRows(document.getElementById('resultsTableBody'), faultsRows, { ctaMode:'track' });
+                resultsFooter.innerHTML = 'Showing <strong>' + faultsRows.length + '</strong> open faults';
+            } else {
+                renderRows(document.getElementById('resultsTableBody'), allServicesRows);
+                resultsFooter.innerHTML = 'Showing <strong>10</strong> out of <strong>199 items</strong>';
+            }
+        });
+
+        // Reposition pills on resize (tab widths can change with breakpoints)
+        window.addEventListener('resize', function() {
+            [loadingSwitcher, resultsSwitcher].forEach(function(sw) {
+                positionPill(sw, sw.querySelector('.switcher-tab.active'));
+            });
+        });
+
+        // ═══════════ TRACK A FAULT (TAF) NAV ═══════════
+        const appEl = document.getElementById('app');
+        function openTafView() {
+            appEl.classList.add('taf-visible');
+            window.scrollTo({ top: 0, behavior: 'auto' });
+        }
+        function closeTafView() {
+            appEl.classList.remove('taf-visible');
+            window.scrollTo({ top: 0, behavior: 'auto' });
+        }
+        document.querySelectorAll('.js-taf-back').forEach(function(el) {
+            el.addEventListener('click', closeTafView);
+        });
+
+        // Render the "Track a different fault" mini-table
+        const tafRelatedRows = [
+            { type:'Broadband', ref:'1-108617949', id:'01168222981', reported:'13/03/23', status:'In progress' },
+            { type:'Broadband', ref:'1-108617949', id:'01168222981', reported:'13/03/23', status:'Action needed' },
+            { type:'Phone line', ref:'1-108617949', id:'01168222981', reported:'13/03/23', status:'Action needed' }
+        ];
+        function tafStatusBadge(status) {
+            if (status === 'In progress') return '<span class="status-badge info">In progress</span>';
+            return '<span class="status-badge pending">Action needed</span>';
+        }
+        (function renderTafTable() {
+            const body = document.getElementById('tafRelatedBody');
+            if (!body) return;
+            const header = document.createElement('div');
+            header.className = 'taf-grid-header';
+            header.innerHTML =
+                '<div class="cell">Fault reference</div>' +
+                '<div class="cell">Product</div>' +
+                '<div class="cell">Service ID</div>' +
+                '<div class="cell">Fault reported</div>' +
+                '<div class="cell">Status</div>' +
+                '<div class="cell">Action</div>';
+            body.appendChild(header);
+            tafRelatedRows.forEach(function(r) {
+                const row = document.createElement('div');
+                row.className = 'taf-grid-row';
+                const cta = r.status === 'In progress'
+                    ? '<button class="btn-primary btn-sm">View progress</button>'
+                    : '<button class="btn-primary btn-sm">Take action</button>';
+                row.innerHTML =
+                    '<div class="cell">' + iconFor(r.type) + '<strong>' + r.ref + '</strong></div>' +
+                    '<div class="cell">' + r.type + '</div>' +
+                    '<div class="cell">' + r.id + '</div>' +
+                    '<div class="cell">' + r.reported + '</div>' +
+                    '<div class="cell">' + tafStatusBadge(r.status) + '</div>' +
+                    '<div class="cell">' + cta + '</div>';
+                body.appendChild(row);
+            });
+        })();
+
+        // ═══════════════════════════════════════════════════════════════
+        //  REPORT-A-FAULT ENHANCED DIAGNOSTICS JOURNEY
+        // ═══════════════════════════════════════════════════════════════
+
+        /* ── DEV-CONTROLLED MOCK FLAGS (not exposed in the UI) ──
+           Change these in the console or here to switch scenarios:
+             MOCK.duplicateFound   true | false
+             MOCK.resultScenario   'no-faults' | 'internal-checks' | 'engineer'
+             MOCK.diagnosticsDelayMs  shortened delay so demos don't wait 20s
+           You can also set them live, e.g.  MOCK.resultScenario = 'engineer'  */
+        const MOCK = {
+            duplicateFound: false,
+            resultScenario: 'internal-checks',       // 'no-faults' | 'internal-checks' | 'engineer'
+            diagnosticsDelayMs: 6000           // real reveal timings are 5/10/15/20s; results show after this delay
+        };
+        window.MOCK = MOCK; // expose for console tweaking
+
+        /* ── JOURNEY STATE (mocked local state only) ── */
+        const journey = {
+            selectedService: null,
+            selectedSymptom: null,
+            duplicateOutcome: null,   // 'found' | 'none'
+            diagnosticResults: null,  // array
+            selfHelpViewed: false,
+            finalAction: null         // 'view-help' | 'issue-resolved' | 'continue-fault'
+        };
+
+        /* ── RESULT SCENARIOS (configurable mock data) ── */
+        const RESULT_SCENARIOS = {
+            'no-faults': {
+                overall: 'ok',
+                title: 'No faults found',
+                text: "Our enhanced checks didn't identify a fault with your broadband service.",
+                results: [
+                    { name:'Major service outages', state:'no-issue', detail:'No outages reported in your area.' },
+                    { name:'Broadband connection', state:'no-issue', detail:'Your connection is stable and performing as expected.' },
+                    { name:'Internal wiring and setup', state:'no-issue', detail:'No problems detected with your setup.' },
+                    { name:'External network', state:'no-issue', detail:'The connection to the exchange looks healthy.' }
+                ]
+            },
+            'internal-checks': {
+                overall: 'warn',
+                title: 'Internal checks required',
+                text: "We couldn\u2019t confirm the issue is with the external network. Please check your hub, cables and internal setup to help us narrow down the problem.",
+                results: [
+                    { name:'Major service outages', state:'no-issue', detail:'No outages reported in your area.' },
+                    { name:'Broadband connection', state:'no-issue', detail:'Your connection is stable and performing as expected.' },
+                    { name:'Internal wiring and setup', state:'issue', detail:"We couldn\u2019t confirm this is healthy. Please check your cables and equipment." },
+                    { name:'External network', state:'no-issue', detail:'The connection to the exchange looks healthy.' }
+                ]
+            },
+            'engineer': {
+                overall: 'action',
+                title: 'Further support may be needed',
+                text: 'Our checks found an issue we can\u2019t fix remotely. Continuing with your fault lets us arrange the right support.',
+                results: [
+                    { name:'Major service outages', state:'no-issue', detail:'No outages reported in your area.' },
+                    { name:'Broadband connection', state:'issue', detail:'We detected a problem affecting your connection.' },
+                    { name:'Internal wiring and setup', state:'no-issue', detail:'No problems detected with your setup.' },
+                    { name:'External network', state:'unavailable', detail:"We couldn\u2019t complete this check right now." }
+                ]
+            }
+        };
+
+        /* ── VIEW ROUTER ── */
+        const journeyViews = {
+            duplicate: document.getElementById('duplicateView'),
+            diagResults: document.getElementById('resultsDiagView')
+        };
+        const symptomModal = document.getElementById('symptomModal');
+        const diagLoadingModal = document.getElementById('diagLoadingModal');
+
+        function openModal(modal) {
+            modal.hidden = false;
+            document.body.style.overflow = 'hidden';
+            var heading = modal.querySelector('h2');
+            if (heading) setTimeout(function() { heading.focus(); }, 100);
+        }
+        function closeModal(modal) {
+            modal.hidden = true;
+            document.body.style.overflow = '';
+        }
+
+        // Close symptom modal via X or backdrop click
+        document.querySelector('.js-close-symptom').addEventListener('click', function() {
+            closeModal(symptomModal);
+        });
+        symptomModal.addEventListener('click', function(e) {
+            if (e.target === symptomModal) closeModal(symptomModal);
+        });
+
+        function showJourneyView(name) {
+            appEl.classList.add('journey-active');
+            Object.keys(journeyViews).forEach(function(k) {
+                journeyViews[k].classList.toggle('active', k === name);
+            });
+            window.scrollTo({ top: 0, behavior: 'auto' });
+        }
+        function exitJourney() {
+            appEl.classList.remove('journey-active');
+            closeModal(symptomModal);
+            closeModal(diagLoadingModal);
+            Object.keys(journeyViews).forEach(function(k) { journeyViews[k].classList.remove('active'); });
+            // Return to the results dashboard
+            appEl.classList.add('results-visible');
+            appEl.classList.remove('taf-visible');
+            window.scrollTo({ top: 0, behavior: 'auto' });
+        }
+        document.querySelectorAll('.js-journey-exit').forEach(function(el) {
+            el.addEventListener('click', exitJourney);
+        });
+
+        /* Move focus to a view's heading (accessibility) */
+        function focusHeading(view) {
+            var h = view.querySelector('h1');
+            if (h) { h.focus(); }
+        }
+
+        /* Reflect the selected service across the journey screens */
+        function paintSelectedService() {
+            var s = journey.selectedService;
+            if (!s) return;
+            document.querySelectorAll('.js-service-name').forEach(function(el) { el.textContent = 'BT ' + s.product; });
+            document.querySelectorAll('.js-service-id').forEach(function(el) { el.textContent = s.id; });
+        }
+
+        /* ── ENTRY POINT: Report a fault ── */
+        function startReportFault(service) {
+            // Only broadband is eligible for the enhanced journey
+            if (service.product !== 'Broadband') {
+                alert('The enhanced diagnostics journey is available for broadband services in this prototype.');
+                return;
+            }
+            journey.selectedService = service;
+            journey.selectedSymptom = null;
+            journey.duplicateOutcome = null;
+            journey.diagnosticResults = null;
+            paintSelectedService();
+            // reset symptom form
+            var form = document.getElementById('symptomForm');
+            form.reset();
+            document.getElementById('symptomContinue').disabled = true;
+            // Open the symptom modal over the current page
+            openModal(symptomModal);
+        }
+
+        /* ── SYMPTOM SELECTION ── */
+        const symptomForm = document.getElementById('symptomForm');
+        const symptomContinue = document.getElementById('symptomContinue');
+        symptomForm.addEventListener('change', function() {
+            var checked = symptomForm.querySelector('input[name="symptom"]:checked');
+            symptomContinue.disabled = !checked;
+        });
+        symptomForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var checked = symptomForm.querySelector('input[name="symptom"]:checked');
+            if (!checked) return;
+            journey.selectedSymptom = checked.value;
+            runDuplicateCheck();
+        });
+
+        /* ── DUPLICATE-TEST CHECK (mocked) ── */
+        function runDuplicateCheck() {
+            // Close the symptom modal
+            closeModal(symptomModal);
+            journey.duplicateOutcome = MOCK.duplicateFound ? 'found' : 'none';
+            if (journey.duplicateOutcome === 'found') {
+                document.getElementById('duplicateWhen').textContent = 'Today at 09:42';
+                showJourneyView('duplicate');
+                focusHeading(journeyViews.duplicate);
+            } else {
+                startDiagnosticsLoading();
+            }
+        }
+        // "View existing result" on the duplicate screen jumps to the results
+        document.querySelector('.js-view-existing-result').addEventListener('click', function() {
+            renderDiagnosticResults();
+            showJourneyView('diagResults');
+            focusHeading(journeyViews.diagResults);
+        });
+
+        /* ── ENHANCED DIAGNOSTICS LOADING ── */
+        const diagItems = document.querySelectorAll('.diag-item');
+        let diagTimers = [];
+        function clearDiagTimers() { diagTimers.forEach(clearTimeout); diagTimers = []; }
+        function startDiagnosticsLoading() {
+            openModal(diagLoadingModal);
+            clearDiagTimers();
+            var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            // All four labels visible at 50%; reveal to 100% at 5/10/15/20s (reassurance only, not real progress)
+            diagItems.forEach(function(item) { item.classList.remove('revealed'); });
+            [5000, 10000, 15000, 20000].forEach(function(t, i) {
+                diagTimers.push(setTimeout(function() {
+                    if (diagItems[i]) diagItems[i].classList.add('revealed');
+                }, reduceMotion ? 0 : t));
+            });
+            // Results arrive together after the configurable mocked delay
+            diagTimers.push(setTimeout(function() {
+                closeModal(diagLoadingModal);
+                renderDiagnosticResults();
+                showJourneyView('diagResults');
+                focusHeading(journeyViews.diagResults);
+            }, MOCK.diagnosticsDelayMs));
+        }
+
+        /* ── TEST RESULTS ── */
+        function stateMeta(state) {
+            if (state === 'no-issue') return { cls:'no-issue', tag:'Pass',
+                icon:'<path d="M20 6 9 17l-5-5"/>' };
+            if (state === 'issue') return { cls:'issue', tag:'Issue found',
+                icon:'<circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><path d="M12 16h.01"/>' };
+            return { cls:'unavailable', tag:'Check unavailable',
+                icon:'<circle cx="12" cy="12" r="10"/><path d="M8 12h8"/>' };
+        }
+        function overallMeta(overall) {
+            if (overall === 'ok') return { status:'success', icon:'<circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/>' };
+            if (overall === 'warn') return { status:'error', icon:'<circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><path d="M12 16h.01"/>' };
+            return { status:'error', icon:'<circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><path d="M12 16h.01"/>' };
+        }
+        function renderDiagnosticResults() {
+            var scenario = RESULT_SCENARIOS[MOCK.resultScenario] || RESULT_SCENARIOS['no-faults'];
+            journey.diagnosticResults = scenario.results;
+
+            // Populate service info from selected service
+            var s = journey.selectedService;
+            if (s) {
+                var idEl = document.querySelector('.js-diag-service-id');
+                var addrEl = document.querySelector('.js-diag-service-addr');
+                if (idEl) idEl.textContent = s.id || '01168222981';
+                if (addrEl) addrEl.textContent = s.addr || '12 Kingscliffe Road, NG31 8ET';
+            }
+
+            // Overall banner (Arc Alert pattern)
+            var banner = document.getElementById('outcomeBanner');
+            var om = overallMeta(scenario.overall);
+            banner.className = 'arc-alert';
+            banner.setAttribute('data-status', om.status);
+            document.getElementById('outcomeIcon').innerHTML = om.icon;
+            document.getElementById('outcomeTitle').textContent = scenario.title;
+            document.getElementById('outcomeText').textContent = scenario.text;
+
+            // Check results list — rendered inside a single bordered card
+            var list = document.getElementById('diagResultsList');
+            list.innerHTML = '';
+            scenario.results.forEach(function(r) {
+                var m = stateMeta(r.state);
+                var el = document.createElement('div');
+                el.className = 'result-item ' + m.cls;
+                el.innerHTML =
+                    '<svg class="result-status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + m.icon + '</svg>' +
+                    '<div class="result-body"><div class="result-name">' + r.name + '</div><div class="result-detail">' + r.detail + '</div></div>' +
+                    '<span class="result-tag">' + m.tag + '</span>';
+                list.appendChild(el);
+            });
+
+            // Next actions
+            renderResultActions(scenario.overall);
+        }
+        function renderResultActions(overall) {
+            var wrap = document.getElementById('diagResultActions');
+            wrap.innerHTML = '';
+
+            var arrowIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+            var questionIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>';
+
+            function primary(label, icon) {
+                var b = document.createElement('button');
+                b.className = 'btn-primary';
+                b.innerHTML = label + (icon || '');
+                return b;
+            }
+            function secondary(label, icon) {
+                var b = document.createElement('button');
+                b.className = 'btn-secondary';
+                b.innerHTML = label + (icon || '');
+                return b;
+            }
+
+            var viewHelpBtn, continueBtn;
+            if (overall === 'ok') {
+                // No faults: "View help" primary, "Continue with fault" secondary
+                viewHelpBtn = primary('View help', questionIcon);
+                viewHelpBtn.onclick = function(){ journey.selfHelpViewed=true; journey.finalAction='view-help'; };
+                continueBtn = secondary('Continue with fault', arrowIcon);
+                continueBtn.onclick = function(){ journey.finalAction='continue-fault'; openTafFromJourney(); };
+            } else if (overall === 'warn') {
+                // Internal checks: "View help" primary, "Continue with fault" secondary
+                viewHelpBtn = primary('View help', questionIcon);
+                viewHelpBtn.onclick = function(){ journey.selfHelpViewed=true; journey.finalAction='view-help'; };
+                continueBtn = secondary('Continue with fault', arrowIcon);
+                continueBtn.onclick = function(){ journey.finalAction='continue-fault'; openTafFromJourney(); };
+            } else {
+                // Engineer / action: "View help" primary, "Continue with fault" secondary
+                viewHelpBtn = primary('View help', questionIcon);
+                viewHelpBtn.onclick = function(){ journey.selfHelpViewed=true; journey.finalAction='view-help'; };
+                continueBtn = secondary('Continue with fault', arrowIcon);
+                continueBtn.onclick = function(){ journey.finalAction='continue-fault'; openTafFromJourney(); };
+            }
+            wrap.appendChild(viewHelpBtn);
+            wrap.appendChild(continueBtn);
+        }
+
+        // "Continue with fault" hands off to the existing Track-a-Fault progress page
+        function openTafFromJourney() {
+            appEl.classList.remove('journey-active');
+            Object.keys(journeyViews).forEach(function(k) { journeyViews[k].classList.remove('active'); });
+            appEl.classList.add('results-visible');
+            openTafView();
+        }
+
+        // ═══════════ LOTTIE ═══════════
+        function loadAnimations() {
+            [
+                { el:'anim-map', path:'anim-map.json' },
+                { el:'anim-building', path:'anim-building.json' },
+                { el:'anim-router', path:'anim-router.json' }
+            ].forEach(function(cfg) {
+                try {
+                    lottie.loadAnimation({
+                        container: document.getElementById(cfg.el),
+                        renderer: 'svg', loop: true, autoplay: true, path: cfg.path
+                    });
+                } catch (e) { console.warn('Lottie load failed:', cfg.path, e); }
+            });
+        }
+
+        // ═══════════ CAROUSEL ═══════════
+        const SLIDE_WIDTH = 1010;
+        const PHASE_MS = 6667;
+        const TOTAL_PHASES = 3;
+        let phase = 0;
+        const track = document.getElementById('carouselTrack');
+        const captions = document.querySelectorAll('.caption-item');
+        function goToPhase(i) {
+            track.style.transform = 'translateX(' + (-i * SLIDE_WIDTH) + 'px)';
+            captions.forEach(function(c) { c.classList.remove('active'); });
+            captions[i].classList.add('active');
+        }
+        function advance() { phase = (phase + 1) % TOTAL_PHASES; goToPhase(phase); }
+
+        // ═══════════ FLOW ═══════════
+        const app = document.getElementById('app');
+        const LOADING_DURATION = 20000;
+        window.addEventListener('load', function() {
+            loadAnimations();
+            goToPhase(0);
+            // Re-measure pills once laid out
+            positionPill(loadingSwitcher, loadingSwitcher.querySelector('.switcher-tab.active'));
+            positionPill(resultsSwitcher, resultsSwitcher.querySelector('.switcher-tab.active'));
+            const carouselTimer = setInterval(advance, PHASE_MS);
+            setTimeout(function() {
+                clearInterval(carouselTimer);
+                app.classList.add('results-visible');
+                // Results switcher may have been hidden (width 0) — reposition now visible
+                positionPill(resultsSwitcher, resultsSwitcher.querySelector('.switcher-tab.active'));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, LOADING_DURATION);
+        });
+    </script>
+</body>
+</html>
