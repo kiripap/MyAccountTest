@@ -4,7 +4,6 @@ import { ButtonV2 } from "@arc-ui/components/ButtonV2";
 import { Breadcrumbs, BreadcrumbsItem, BreadcrumbsLink } from "@arc-ui/components/Breadcrumbs";
 import { BtIconQuestion } from "@arc-ui/icons/BtIconQuestion";
 import { BtIconArrowRight } from "@arc-ui/icons/BtIconArrowRight";
-import { BtIconTick } from "@arc-ui/icons/BtIconTick";
 
 import type { Scenario, ScenarioData, CheckResult } from "../data/mockData";
 import { RESULT_SCENARIOS } from "../data/mockData";
@@ -60,13 +59,11 @@ function CheckBadge({ state }: { state: CheckResult["state"] }) {
 function ResultActions({
   scenario,
   onContinueFault,
-  onIssueResolved,
   onViewHelp,
   onBookEngineer,
 }: {
   scenario: Scenario;
   onContinueFault?: () => void;
-  onIssueResolved?: () => void;
   onViewHelp?: () => void;
   onBookEngineer?: () => void;
 }) {
@@ -113,7 +110,6 @@ export function TestResultsPage({
   serviceAddr = "12 Kingscliffe Road, NG31 8ET",
   onViewHelp,
   onContinueFault,
-  onIssueResolved,
   onBookEngineer,
   onBack,
 }: TestResultsPageProps) {
@@ -211,7 +207,6 @@ export function TestResultsPage({
         <ResultActions
           scenario={scenario}
           onContinueFault={onContinueFault}
-          onIssueResolved={onIssueResolved}
           onViewHelp={onViewHelp}
           onBookEngineer={onBookEngineer}
         />
