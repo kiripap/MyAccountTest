@@ -2,9 +2,27 @@
    BT Business Repair Workshop — React Prototype CSS
    ═══════════════════════════════════════════════════ */
 
-@font-face { font-family: 'BT Curve'; font-weight: 400; src: local('BT Curve Regular'), local('BTCurve-Regular'); }
-@font-face { font-family: 'BT Curve'; font-weight: 500; src: local('BT Curve Headline'), local('BTCurve-Headline'); }
-@font-face { font-family: 'BT Curve'; font-weight: 700; src: local('BT Curve Bold'), local('BTCurve-Bold'); }
+@font-face {
+  font-family: 'BT Curve';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/BTCurve_W_Rg.woff2') format('woff2'),
+       local('BT Curve Regular'), local('BTCurve-Regular');
+}
+@font-face {
+  font-family: 'BT Curve';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/BTCurve_W_Headline.woff2') format('woff2'),
+       local('BT Curve Headline'), local('BTCurve-Headline');
+}
+@font-face {
+  font-family: 'BT Curve';
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/BTCurve_W_Bd.woff2') format('woff2'),
+       local('BT Curve Bold'), local('BTCurve-Bold');
+}
 
 :root {
   --indigo-800: #5514B4;
