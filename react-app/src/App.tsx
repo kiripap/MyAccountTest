@@ -10,7 +10,7 @@ import { TrackAFaultPage } from "./pages/TrackAFaultPage";
 import { DuplicateView } from "./pages/DuplicateView";
 import { TestResultsPage } from "./pages/TestResultsPage";
 
-import type { Scenario, MockConfig, ServiceRow } from "./data/mockData";
+import type { Scenario, MockConfig, ServiceRow, ResultsVariant } from "./data/mockData";
 import { defaultMockConfig } from "./data/mockData";
 
 /* ─── Error boundary ─── */
@@ -100,8 +100,14 @@ export default function App() {
   }, []);
 
   /* ─── Dev scenario switcher ─── */
+  const [switcherOpen, setSwitcherOpen] = useState(false);
+
   const updateScenario = useCallback((s: Scenario) => {
     setMockConfig((prev) => ({ ...prev, resultScenario: s }));
+  }, []);
+
+  const updateResultsVariant = useCallback((v: ResultsVariant) => {
+    setMockConfig((prev) => ({ ...prev, resultsVariant: v }));
   }, []);
 
   const toggleDuplicate = useCallback(() => {
@@ -121,6 +127,7 @@ export default function App() {
       case "results":
         return (
           <ResultsView
+            resultsVariant={mockConfig.resultsVariant}
             onReportFault={handleReportFault}
             onViewProgress={handleViewProgress}
             onStartFixing={() => {
@@ -180,41 +187,64 @@ export default function App() {
           onDuplicateFound={handleDuplicateFound}
         />
 
-        {/* Dev scenario switcher */}
+        {/* Dev scenario switcher — minimized by default */}
         <div className="dev-switcher">
-          <div className="dev-switcher-row">
-            <span>Screen:</span>
-            {(["loading", "results", "taf", "duplicate", "testResults"] as Screen[]).map((s) => (
-              <button
-                key={s}
-                className={screen === s ? "active" : ""}
-                onClick={() => skipToScreen(s)}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-          <div className="dev-switcher-row">
-            <span>Scenario:</span>
-            {(["no-faults", "internal-checks", "engineer"] as Scenario[]).map((s) => (
-              <button
-                key={s}
-                className={mockConfig.resultScenario === s ? "active" : ""}
-                onClick={() => updateScenario(s)}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-          <div className="dev-switcher-row">
-            <span>Duplicate:</span>
-            <button
-              className={mockConfig.duplicateFound ? "active" : ""}
-              onClick={toggleDuplicate}
-            >
-              {mockConfig.duplicateFound ? "ON" : "OFF"}
-            </button>
-          </div>
+          <button
+            className="dev-switcher-toggle"
+            onClick={() => setSwitcherOpen((o) => !o)}
+            aria-label={switcherOpen ? "Collapse switcher" : "Expand switcher"}
+          >
+            {switcherOpen ? "▼ Dev" : "▲ Dev"}
+          </button>
+          {switcherOpen && (
+            <>
+              <div className="dev-switcher-row">
+                <span>Screen:</span>
+                {(["loading", "results", "taf", "duplicate", "testResults"] as Screen[]).map((s) => (
+                  <button
+                    key={s}
+                    className={screen === s ? "active" : ""}
+                    onClick={() => skipToScreen(s)}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+              <div className="dev-switcher-row">
+                <span>Results:</span>
+                {(["single-card", "all-cards"] as ResultsVariant[]).map((v) => (
+                  <button
+                    key={v}
+                    className={mockConfig.resultsVariant === v ? "active" : ""}
+                    onClick={() => updateResultsVariant(v)}
+                  >
+                    {v}
+                  </button>
+                ))}
+              </div>
+              <div className="dev-switcher-row">
+                <span>Scenario:</span>
+                {(["no-faults", "internal-checks", "engineer"] as Scenario[]).map((s) => (
+                  <button
+                    key={s}
+                    className={mockConfig.resultScenario === s ? "active" : ""}
+                    onClick={() => updateScenario(s)}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+              <div className="dev-switcher-row">
+                <span>Duplicate:</span>
+                <button
+                  className={mockConfig.duplicateFound ? "active" : ""}
+                  onClick={toggleDuplicate}
+                >
+                  {mockConfig.duplicateFound ? "ON" : "OFF"}
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

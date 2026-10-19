@@ -3,7 +3,7 @@ import { FaultCards } from "../components/FaultCards";
 import { ArcContentSwitcher } from "../components/ArcContentSwitcher";
 import { ServiceTable } from "../components/ServiceTable";
 import { allServicesRows, faultsRows } from "../data/mockData";
-import type { ServiceRow } from "../data/mockData";
+import type { ServiceRow, ResultsVariant } from "../data/mockData";
 
 const SWITCHER_TABS = [
   { label: "All services", value: "all" },
@@ -11,13 +11,14 @@ const SWITCHER_TABS = [
 ];
 
 interface ResultsViewProps {
+  resultsVariant?: ResultsVariant;
   onReportFault: (row: ServiceRow) => void;
   onViewProgress: () => void;
   onStartFixing: () => void;
   onTakeAction: () => void;
 }
 
-export function ResultsView({ onReportFault, onViewProgress, onStartFixing, onTakeAction }: ResultsViewProps) {
+export function ResultsView({ resultsVariant = "single-card", onReportFault, onViewProgress, onStartFixing, onTakeAction }: ResultsViewProps) {
   const [switcherValue, setSwitcherValue] = useState("all");
 
   const handleSwitcherChange = useCallback((value: string) => {
@@ -30,11 +31,11 @@ export function ResultsView({ onReportFault, onViewProgress, onStartFixing, onTa
   return (
     <div className="container bleed">
       <div className="page-header">
-        <h1 className="results-heading">Checks complete</h1>
+        <h1>Checks complete</h1>
       </div>
 
       <main className="main" style={{ paddingTop: 56 }}>
-        <FaultCards onStartFixing={onStartFixing} onTakeAction={onTakeAction} />
+        <FaultCards variant={resultsVariant} onStartFixing={onStartFixing} onTakeAction={onTakeAction} />
 
         <ArcContentSwitcher
           tabs={SWITCHER_TABS}

@@ -127,15 +127,20 @@ export const RESULT_SCENARIOS: Record<Scenario, ScenarioData> = {
   },
 };
 
+/* ─── Results page card variants ─── */
+export type ResultsVariant = "single-card" | "all-cards";
+
 /* ─── Mock config ─── */
 export interface MockConfig {
   duplicateFound: boolean;
   resultScenario: Scenario;
+  resultsVariant: ResultsVariant;
   diagnosticsDelayMs: number;
 }
 
 export const defaultMockConfig: MockConfig = {
   duplicateFound: false,
   resultScenario: "internal-checks",
+  resultsVariant: "single-card",
   diagnosticsDelayMs: 6000,
 };

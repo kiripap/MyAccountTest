@@ -1,6 +1,10 @@
 import { useState, useCallback, useEffect } from "react";
 import { RadioGroup, RadioGroupInput } from "@arc-ui/components/RadioGroup";
 import { ButtonV2 } from "@arc-ui/components/ButtonV2";
+import { Heading } from "@arc-ui/components/Heading";
+import { Text } from "@arc-ui/components/Text";
+import { Rule } from "@arc-ui/components/Rule";
+import { Disclosure } from "@arc-ui/components/Disclosure";
 
 const SYMPTOMS = [
   { id: "no-connection", label: "No connection", value: "No connection" },
@@ -29,11 +33,9 @@ interface SymptomModalProps {
 
 export function SymptomModal({ isOpen, serviceId, onClose, onSubmit }: SymptomModalProps) {
   const [selected, setSelected] = useState<string>("");
-  const [guidanceOpen, setGuidanceOpen] = useState(false);
 
   useEffect(() => {
-    if (isOpen) { document.body.style.overflow = "hidden"; }
-    else { document.body.style.overflow = ""; }
+    document.body.style.overflow = isOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
@@ -44,9 +46,8 @@ export function SymptomModal({ isOpen, serviceId, onClose, onSubmit }: SymptomMo
     return () => window.removeEventListener("keydown", handler);
   }, [isOpen, onClose]);
 
-  // Reset when modal opens
   useEffect(() => {
-    if (isOpen) { setSelected(""); setGuidanceOpen(false); }
+    if (isOpen) { setSelected(""); }
   }, [isOpen]);
 
   const handleSubmit = useCallback(() => {
@@ -57,56 +58,43 @@ export function SymptomModal({ isOpen, serviceId, onClose, onSubmit }: SymptomMo
 
   return (
     <div
-      className="modal-overlay-enter"
       style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 1000,
-        background: "rgba(0,0,0,0.45)",
-        display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        padding: "60px 24px 24px",
-        overflowY: "auto",
+        position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.45)",
+        display: "flex", alignItems: "flex-start", justifyContent: "center",
+        padding: "60px 24px 24px", overflowY: "auto",
       }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
-        className="modal-dialog-enter"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="symptomHeading"
         style={{
-          background: "white",
-          borderRadius: 24,
-          padding: 44,
-          width: "100%",
-          maxWidth: 800,
-          position: "relative",
-          boxShadow: "0 12px 48px rgba(0,0,0,0.16)",
-          display: "flex",
-          flexDirection: "column",
-          gap: 24,
+          background: "white", borderRadius: 24, padding: 44, width: "100%", maxWidth: 800,
+          position: "relative", boxShadow: "0 12px 48px rgba(0,0,0,0.16)",
+          display: "flex", flexDirection: "column", gap: 24,
         }}
       >
-        {/* Close button */}
-        <button className="modal-close-btn" aria-label="close" onClick={onClose}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 24, height: 24 }}>
+        <button
+          aria-label="close"
+          onClick={onClose}
+          style={{
+            position: "absolute", top: 12, right: 12, width: 40, height: 40,
+            background: "none", border: "none", cursor: "pointer", borderRadius: 8,
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 24, height: 24 }}>
             <path d="M18 6 6 18" /><path d="m6 6 12 12" />
           </svg>
         </button>
 
-        {/* Title */}
-        <div style={{ paddingRight: 16, display: "flex", flexDirection: "column", gap: 12 }}>
-          <h2 id="symptomHeading" style={{ fontSize: 32, fontWeight: 500, lineHeight: "40px", color: "#2A2A2A" }}>
+        <div style={{ paddingRight: 16 }}>
+          <Heading level="2" size="m" isResponsive={false}>
             Select the type of broadband issue you&rsquo;re having
-          </h2>
-          <p style={{ fontSize: 16, lineHeight: "24px", color: "#2A2A2A" }}>
-            Service ID: <strong>{serviceId || "XXX"}</strong>
-          </p>
+          </Heading>
+          <Text size="m" elementType="p">Service ID: <strong>{serviceId || "XXX"}</strong></Text>
         </div>
 
-        {/* Radio group */}
         <RadioGroup
           id="symptom-group"
           label="Select the symptom you're experiencing"
@@ -120,64 +108,21 @@ export function SymptomModal({ isOpen, serviceId, onClose, onSubmit }: SymptomMo
           ))}
         </RadioGroup>
 
-        {/* CTA — above the disclosure */}
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <ButtonV2 label="Run test" buttonStyle="primary" onClick={selected ? handleSubmit : undefined} />
         </div>
 
-        {/* Disclosure with animated expand/collapse */}
-        <div>
-          <hr style={{ border: "none", borderTop: "1px solid #C8C8C8", margin: 0 }} />
-          <button
-            onClick={() => setGuidanceOpen(!guidanceOpen)}
-            style={{
-              display: "flex", alignItems: "center", gap: 20,
-              width: "100%", padding: "16px 0", background: "none", border: "none",
-              cursor: "pointer", fontSize: 20, fontWeight: 500, lineHeight: "26px",
-              color: "#5514B4", textAlign: "left",
-            }}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              style={{
-                width: 20, height: 20, flexShrink: 0,
-                transform: guidanceOpen ? "rotate(180deg)" : "rotate(0deg)",
-                transition: "transform 0.3s var(--motion-ease, cubic-bezier(0.4, 0, 0.2, 1))",
-              }}
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-            Guidance on different issues
-          </button>
-          <hr style={{ border: "none", borderTop: "1px solid #C8C8C8", margin: 0 }} />
-
-          {/* Animated content area */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateRows: guidanceOpen ? "1fr" : "0fr",
-              transition: "grid-template-rows 0.35s var(--motion-ease, cubic-bezier(0.4, 0, 0.2, 1))",
-            }}
-          >
-            <div style={{ overflow: "hidden" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: 20, padding: "16px 0" }}>
-                {GUIDANCE.map((item, i) => (
-                  <div key={i} style={{ display: "flex", flexDirection: "column" }}>
-                    <span style={{ fontWeight: 500, fontSize: 16, lineHeight: "24px", color: "#2A2A2A" }}>
-                      {item.title}
-                    </span>
-                    <span style={{ fontSize: 16, lineHeight: "24px", color: "#2A2A2A" }}>
-                      {item.desc}
-                    </span>
-                  </div>
-                ))}
+        <Rule />
+        <Disclosure summary="Guidance on different issues" headingLevel="3">
+          <div style={{ display: "flex", flexDirection: "column", gap: 20, padding: "8px 0" }}>
+            {GUIDANCE.map((item, i) => (
+              <div key={i}>
+                <Text size="m"><strong>{item.title}</strong></Text>
+                <Text size="m" elementType="p">{item.desc}</Text>
               </div>
-            </div>
+            ))}
           </div>
-        </div>
+        </Disclosure>
       </div>
     </div>
   );

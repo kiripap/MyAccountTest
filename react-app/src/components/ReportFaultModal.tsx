@@ -1,6 +1,12 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { RadioGroup, RadioGroupInput } from "@arc-ui/components/RadioGroup";
 import { ButtonV2 } from "@arc-ui/components/ButtonV2";
+import { Heading } from "@arc-ui/components/Heading";
+import { Text } from "@arc-ui/components/Text";
+import { Spinner } from "@arc-ui/components/Spinner";
+import { Rule } from "@arc-ui/components/Rule";
+import { Disclosure } from "@arc-ui/components/Disclosure";
+import { VerticalSpace } from "@arc-ui/components/VerticalSpace";
 
 /* ─── Data ─── */
 const SYMPTOMS = [
@@ -28,7 +34,6 @@ const DIAG_ITEMS = [
   "The external network...",
 ];
 
-/* ─── Types ─── */
 type Phase = "symptom" | "loading";
 
 interface ReportFaultModalProps {
@@ -52,19 +57,16 @@ export function ReportFaultModal({
 }: ReportFaultModalProps) {
   const [phase, setPhase] = useState<Phase>("symptom");
   const [selected, setSelected] = useState("");
-  const [guidanceOpen, setGuidanceOpen] = useState(false);
   const [contentFading, setContentFading] = useState(false);
 
   const diagTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const diagItemsRef = useRef<(HTMLLIElement | null)[]>([]);
 
-  // Lock body scroll
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
-  // Escape key
   useEffect(() => {
     if (!isOpen || phase === "loading") return;
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -72,17 +74,15 @@ export function ReportFaultModal({
     return () => window.removeEventListener("keydown", handler);
   }, [isOpen, phase, onClose]);
 
-  // Reset on open
   useEffect(() => {
     if (isOpen) {
       setPhase("symptom");
       setSelected("");
-      setGuidanceOpen(false);
       setContentFading(false);
     }
   }, [isOpen]);
 
-  // Diagnostics timer — runs when phase is "loading"
+  // Diagnostics timer
   useEffect(() => {
     if (phase !== "loading") return;
 
@@ -113,21 +113,11 @@ export function ReportFaultModal({
     };
   }, [phase, diagnosticsDelayMs, onDiagnosticsComplete]);
 
-  // Submit symptom → cross-fade to loading phase
   const handleSubmit = useCallback(() => {
     if (!selected) return;
-
-    if (duplicateFound) {
-      onDuplicateFound?.();
-      return;
-    }
-
-    // Cross-fade: fade out symptom content, then switch phase
+    if (duplicateFound) { onDuplicateFound?.(); return; }
     setContentFading(true);
-    setTimeout(() => {
-      setPhase("loading");
-      setContentFading(false);
-    }, 250); // matches the CSS fade duration
+    setTimeout(() => { setPhase("loading"); setContentFading(false); }, 250);
   }, [selected, duplicateFound, onDuplicateFound]);
 
   if (!isOpen) return null;
@@ -136,187 +126,111 @@ export function ReportFaultModal({
     <div
       className="modal-overlay-enter"
       style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 1000,
-        background: "rgba(0,0,0,0.45)",
-        display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        padding: "60px 24px 24px",
-        overflowY: "auto",
+        position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.45)",
+        display: "flex", alignItems: "flex-start", justifyContent: "center",
+        padding: "60px 24px 24px", overflowY: "auto",
       }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget && phase === "symptom") onClose();
-      }}
+      onClick={(e) => { if (e.target === e.currentTarget && phase === "symptom") onClose(); }}
     >
       <div
         className="modal-dialog-enter"
         role={phase === "loading" ? "alertdialog" : "dialog"}
         aria-modal="true"
         style={{
-          background: "white",
-          borderRadius: 24,
-          padding: 44,
-          width: "100%",
-          maxWidth: 800,
-          position: "relative",
-          boxShadow: "0 12px 48px rgba(0,0,0,0.16)",
+          background: "white", borderRadius: 24, padding: 44, width: "100%", maxWidth: 800,
+          position: "relative", boxShadow: "0 12px 48px rgba(0,0,0,0.16)",
         }}
       >
-        {/* Close button — only in symptom phase */}
         {phase === "symptom" && (
-          <button className="modal-close-btn" aria-label="close" onClick={onClose}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 24, height: 24 }}>
+          <button
+            aria-label="close"
+            onClick={onClose}
+            style={{
+              position: "absolute", top: 12, right: 12, width: 40, height: 40,
+              background: "none", border: "none", cursor: "pointer", borderRadius: 8,
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 24, height: 24 }}>
               <path d="M18 6 6 18" /><path d="m6 6 12 12" />
             </svg>
           </button>
         )}
 
-        {/* Content area with cross-fade */}
         <div
           style={{
             opacity: contentFading ? 0 : 1,
             transform: contentFading ? "translateY(8px)" : "translateY(0)",
-            transition: `opacity 0.25s var(--motion-ease, cubic-bezier(0.4,0,0.2,1)), transform 0.25s var(--motion-ease, cubic-bezier(0.4,0,0.2,1))`,
+            transition: "opacity 0.25s ease, transform 0.25s ease",
           }}
         >
-          {phase === "symptom" ? (
-            <SymptomContent
-              serviceId={serviceId}
-              selected={selected}
-              setSelected={setSelected}
-              guidanceOpen={guidanceOpen}
-              setGuidanceOpen={setGuidanceOpen}
-              onSubmit={handleSubmit}
-            />
-          ) : (
-            <LoadingContent diagItemsRef={diagItemsRef} />
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+        {phase === "symptom" ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            <div style={{ paddingRight: 16, display: "flex", flexDirection: "column", gap: 12 }}>
+              <Heading level="2" size="m" isResponsive={false}>
+                Select the type of broadband issue you&rsquo;re having
+              </Heading>
+              <Text size="m" elementType="p">Service ID: <strong>{serviceId || "XXX"}</strong></Text>
+            </div>
 
-/* ─── Symptom selection content ─── */
-function SymptomContent({
-  serviceId,
-  selected,
-  setSelected,
-  guidanceOpen,
-  setGuidanceOpen,
-  onSubmit,
-}: {
-  serviceId: string;
-  selected: string;
-  setSelected: (v: string) => void;
-  guidanceOpen: boolean;
-  setGuidanceOpen: (v: boolean) => void;
-  onSubmit: () => void;
-}) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <div style={{ paddingRight: 16, display: "flex", flexDirection: "column", gap: 12 }}>
-        <h2 style={{ fontSize: 32, fontWeight: 500, lineHeight: "40px", color: "#2A2A2A" }}>
-          Select the type of broadband issue you&rsquo;re having
-        </h2>
-        <p style={{ fontSize: 16, lineHeight: "24px", color: "#2A2A2A" }}>
-          Service ID: <strong>{serviceId || "XXX"}</strong>
-        </p>
-      </div>
-
-      <RadioGroup
-        id="symptom-group"
-        label="Select the symptom you're experiencing"
-        name="symptom"
-        size="s"
-        checkedValue={selected}
-        onChange={(e) => setSelected((e.target as HTMLInputElement).value)}
-      >
-        {SYMPTOMS.map((s) => (
-          <RadioGroupInput key={s.id} id={s.id} label={s.label} value={s.value} />
-        ))}
-      </RadioGroup>
-
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <ButtonV2 label="Run test" buttonStyle="primary" onClick={selected ? onSubmit : undefined} />
-      </div>
-
-      <div>
-        <hr style={{ border: "none", borderTop: "1px solid #C8C8C8", margin: 0 }} />
-        <button
-          onClick={() => setGuidanceOpen(!guidanceOpen)}
-          style={{
-            display: "flex", alignItems: "center", gap: 20, width: "100%",
-            padding: "16px 0", background: "none", border: "none", cursor: "pointer",
-            fontSize: 20, fontWeight: 500, lineHeight: "26px", color: "#5514B4", textAlign: "left",
-          }}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{
-            width: 20, height: 20, flexShrink: 0,
-            transform: guidanceOpen ? "rotate(180deg)" : "rotate(0deg)",
-            transition: "transform var(--motion-duration-normal, 0.3s) var(--motion-ease, cubic-bezier(0.4,0,0.2,1))",
-          }}>
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-          Guidance on different issues
-        </button>
-        <hr style={{ border: "none", borderTop: "1px solid #C8C8C8", margin: 0 }} />
-        <div style={{
-          display: "grid",
-          gridTemplateRows: guidanceOpen ? "1fr" : "0fr",
-          transition: "grid-template-rows 0.35s var(--motion-ease, cubic-bezier(0.4,0,0.2,1))",
-        }}>
-          <div style={{ overflow: "hidden" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 20, padding: "16px 0" }}>
-              {GUIDANCE.map((item, i) => (
-                <div key={i} style={{ display: "flex", flexDirection: "column" }}>
-                  <span style={{ fontWeight: 500, fontSize: 16, lineHeight: "24px", color: "#2A2A2A" }}>{item.title}</span>
-                  <span style={{ fontSize: 16, lineHeight: "24px", color: "#2A2A2A" }}>{item.desc}</span>
-                </div>
+            <RadioGroup
+              id="symptom-group"
+              label="Select the symptom you're experiencing"
+              name="symptom"
+              size="s"
+              checkedValue={selected}
+              onChange={(e) => setSelected((e.target as HTMLInputElement).value)}
+            >
+              {SYMPTOMS.map((s) => (
+                <RadioGroupInput key={s.id} id={s.id} label={s.label} value={s.value} />
               ))}
+            </RadioGroup>
+
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <ButtonV2 label="Run test" buttonStyle="primary" onClick={selected ? handleSubmit : undefined} />
+            </div>
+
+            <Disclosure summary="Guidance on different issues" headingLevel="3">
+              <div style={{ display: "flex", flexDirection: "column", gap: 20, padding: "8px 0" }}>
+                {GUIDANCE.map((item, i) => (
+                  <div key={i}>
+                    <Text size="m"><strong>{item.title}</strong></Text>
+                    <Text size="m" elementType="p">{item.desc}</Text>
+                  </div>
+                ))}
+              </div>
+            </Disclosure>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <Spinner size="s" />
+              <Heading level="2" size="m" isResponsive={false}>We&rsquo;re running further checks</Heading>
+            </div>
+            <div aria-live="polite">
+              <Text size="m"><strong>We&rsquo;re checking:</strong></Text>
+              <VerticalSpace size="16" />
+              <ul className="diag-list">
+                {DIAG_ITEMS.map((label, i) => (
+                  <li
+                    key={i}
+                    className="diag-item"
+                    ref={(el) => { if (diagItemsRef.current) diagItemsRef.current[i] = el; }}
+                  >
+                    <Text size="m">{label}</Text>
+                  </li>
+                ))}
+              </ul>
+              <VerticalSpace size="24" />
+              <Rule />
+              <VerticalSpace size="24" />
+              <Text size="s" tone="muted" elementType="p">
+                This can take a couple of minutes. Please keep this page open while we complete the checks.
+              </Text>
             </div>
           </div>
+        )}
         </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── Loading/diagnostics content ─── */
-function LoadingContent({
-  diagItemsRef,
-}: {
-  diagItemsRef: React.RefObject<(HTMLLIElement | null)[]>;
-}) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <div className="arc-spinner" role="status" aria-label="Running checks" />
-        <h2 style={{ fontSize: 32, fontWeight: 500, lineHeight: "40px", color: "#2A2A2A" }}>
-          We&rsquo;re running further checks
-        </h2>
-      </div>
-      <div aria-live="polite">
-        <p style={{ fontSize: 16, fontWeight: 500, marginBottom: 16, color: "#2A2A2A" }}>
-          We&rsquo;re checking:
-        </p>
-        <ul className="diag-list">
-          {DIAG_ITEMS.map((label, i) => (
-            <li
-              key={i}
-              className="diag-item"
-              ref={(el) => { if (diagItemsRef.current) diagItemsRef.current[i] = el; }}
-            >
-              {label}
-            </li>
-          ))}
-        </ul>
-        <hr style={{ border: "none", borderTop: "1px solid #C8C8C8", margin: "24px 0" }} />
-        <p style={{ fontSize: 14, lineHeight: "20px", color: "#434343" }}>
-          This can take a couple of minutes. Please keep this page open while we complete the checks.
-        </p>
       </div>
     </div>
   );

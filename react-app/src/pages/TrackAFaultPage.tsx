@@ -2,49 +2,30 @@ import { tafRelatedRows } from "../data/mockData";
 import type { TafRelatedRow } from "../data/mockData";
 import { ButtonV2 } from "@arc-ui/components/ButtonV2";
 import { Badge } from "@arc-ui/components/Badge";
+import { Heading } from "@arc-ui/components/Heading";
+import { Text } from "@arc-ui/components/Text";
+import { Breadcrumbs, BreadcrumbsItem, BreadcrumbsLink } from "@arc-ui/components/Breadcrumbs";
+import { ProgressStepper, ProgressStepperItem } from "@arc-ui/components/ProgressStepper";
+import { Disclosure } from "@arc-ui/components/Disclosure";
+import { Rule } from "@arc-ui/components/Rule";
+import { VerticalSpace } from "@arc-ui/components/VerticalSpace";
 import { BtIconBroadband } from "@arc-ui/icons/BtIconBroadband";
 import { BtIconPhone } from "@arc-ui/icons/BtIconPhone";
+import { BtIconAlertTriangle } from "@arc-ui/icons/BtIconAlertTriangle";
+import { BtIconSignature } from "@arc-ui/icons/BtIconSignature";
 
 interface TrackAFaultPageProps {
   onBack: () => void;
 }
 
-/* ─── Inline icons ─── */
-const ChevronRight = () => (
-  <svg className="crumb-sep" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="m9 18 6-6-6-6" />
-  </svg>
-);
-
-const ChevronDown = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="m6 9 6 6 6-6" />
-  </svg>
-);
-
+/* ─── Arc icon wrappers ─── */
 const WarningTriangle = () => (
-  <svg className="taf-alert-icon" viewBox="0 0 24 24" fill="none" stroke="#FFA200" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="32" height="32">
-    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
-    <path d="M12 9v4" />
-    <path d="M12 17h.01" />
-  </svg>
+  <img src={BtIconAlertTriangle} alt="" className="taf-alert-icon" style={{ width: 32, height: 32, flexShrink: 0 }} />
 );
 
 const EditIcon = () => (
-  <svg className="taf-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 20h9" />
-    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
-  </svg>
+  <img src={BtIconSignature} alt="Edit" className="taf-edit" style={{ width: 20, height: 20, cursor: "pointer" }} />
 );
-
-/* ─── Stepper ─── */
-const STEPS = [
-  { title: "Fault report in progress", date: "08/05/2026", desc: "Complete your fault report so we can start investigating the issue.", active: true },
-  { title: "Fault opened", desc: "We\u2019re investigating your fault." },
-  { title: "We\u2019ve identified a fix", desc: "We\u2019re applying the fix and monitoring progress to restore your service." },
-  { title: "Fault fixed", desc: "Your fault has been fixed. Check your service and let us know if you still need help." },
-  { title: "Fault closed", date: "18/05/2026 (est.)", last: true },
-];
 
 /* ─── FAQ items ─── */
 const FAQS = [
@@ -77,24 +58,24 @@ function TafFaultTile({ row }: { row: TafRelatedRow }) {
           <TafProductIcon type={row.type} />
         </div>
         <div className="taf-fault-tile-ref">
-          <span className="taf-fault-tile-ref-label">Fault reference</span>
-          <span className="taf-fault-tile-ref-value">{row.ref}</span>
+          <Text size="s" tone="muted">Fault reference</Text>
+          <Text size="m"><strong>{row.ref}</strong></Text>
         </div>
         <TafStatusBadge status={row.status} />
       </div>
-      <hr className="taf-fault-tile-rule" />
+      <Rule />
       <div className="taf-fault-tile-rows">
         <div className="taf-fault-tile-row">
-          <span className="taf-fault-tile-row-label">Product</span>
-          <span className="taf-fault-tile-row-value">{row.type}</span>
+          <Text size="s" tone="muted">Product</Text>
+          <Text size="s">{row.type}</Text>
         </div>
         <div className="taf-fault-tile-row">
-          <span className="taf-fault-tile-row-label">Service ID</span>
-          <span className="taf-fault-tile-row-value">{row.id}</span>
+          <Text size="s" tone="muted">Service ID</Text>
+          <Text size="s">{row.id}</Text>
         </div>
         <div className="taf-fault-tile-row">
-          <span className="taf-fault-tile-row-label">Reported on</span>
-          <span className="taf-fault-tile-row-value">{row.reported}</span>
+          <Text size="s" tone="muted">Reported on</Text>
+          <Text size="s">{row.reported}</Text>
         </div>
       </div>
       <ButtonV2 label={ctaLabel} buttonStyle="primary" isFullWidth />
@@ -106,24 +87,30 @@ export function TrackAFaultPage({ onBack }: TrackAFaultPageProps) {
   return (
     <>
       <div className="container bleed">
-        {/* Breadcrumbs */}
-        <nav className="breadcrumbs" aria-label="Breadcrumb">
-          <span className="crumb" onClick={onBack}>Dashboard</span>
-          <ChevronRight />
-          <span className="crumb" onClick={onBack}>Faults</span>
-          <ChevronRight />
-          <span className="crumb current">Track a fault</span>
-        </nav>
+        {/* Hero header: breadcrumbs + heading + supporting copy */}
+        <div className="hero-header">
+          <Breadcrumbs>
+            <BreadcrumbsItem spacerIconAfter>
+              <BreadcrumbsLink href="#" onClick={() => onBack()}>Dashboard</BreadcrumbsLink>
+            </BreadcrumbsItem>
+            <BreadcrumbsItem spacerIconAfter>
+              <BreadcrumbsLink href="#" onClick={() => onBack()}>Faults</BreadcrumbsLink>
+            </BreadcrumbsItem>
+            <BreadcrumbsItem>
+              <BreadcrumbsLink href="#" aria-current="page">Track a fault</BreadcrumbsLink>
+            </BreadcrumbsItem>
+          </Breadcrumbs>
 
-        <div className="page-header taf-header">
-          <h1>Fault progress</h1>
-          <p className="taf-subhead">
-            <span>Fault reference: <strong>1-108617949</strong></span>
-            <span className="sep">|</span>
-            <span>Service ID: <strong>1-108617949</strong></span>
-            <span className="sep">|</span>
-            <span>Product: <strong>Broadband</strong></span>
-          </p>
+          <div className="hero-header-text">
+            <Heading level="1" size="xl" fontStyle="display-standard">Fault progress</Heading>
+            <p className="taf-subhead">
+              <Text size="s" isInline>Fault reference: <strong>1-108617949</strong></Text>
+              <span className="sep">|</span>
+              <Text size="s" isInline>Service ID: <strong>1-108617949</strong></Text>
+              <span className="sep">|</span>
+              <Text size="s" isInline>Product: <strong>Broadband</strong></Text>
+            </p>
+          </div>
         </div>
 
         <main className="main">
@@ -134,12 +121,12 @@ export function TrackAFaultPage({ onBack }: TrackAFaultPageProps) {
                 <div className="taf-alert-content">
                   <div className="taf-alert-head">
                     <WarningTriangle />
-                    <span className="taf-alert-title">Action needed</span>
+                    <h2 className="taf-heading-m">Action needed</h2>
                   </div>
-                  <p className="taf-alert-body">
+                  <Text size="m" elementType="p">
                     You&rsquo;ve started reporting a fault but haven&rsquo;t finished yet. Please continue
                     your report so we can start fixing the issue.
-                  </p>
+                  </Text>
                 </div>
                 <div className="taf-alert-ctas">
                   <ButtonV2 label="Resume reporting" buttonStyle="primary" isFullWidth />
@@ -150,85 +137,94 @@ export function TrackAFaultPage({ onBack }: TrackAFaultPageProps) {
             {/* LEFT: Progress / timeline card */}
             <div className="taf-progress-card taf-grid-progress results-animate results-row-animate" style={{ animationDelay: "0.25s" }}>
               <div className="taf-progress-top">
-                <span className="taf-estimate">
-                  Estimated fix date: <strong>Monday 18th May</strong>
-                </span>
-                <span className="action-badge">Action needed</span>
+                <Text size="s">Estimated fix date: <strong>Monday 18th May</strong></Text>
+                <Badge state="warning">Action needed</Badge>
               </div>
 
               <div className="taf-update-box">
                 <div className="taf-update-head">
-                  <span className="taf-update-title">No update currently available</span>
-                  <span className="taf-update-time">16 Jul, 10:25 AM</span>
+                  <Text size="s"><strong>No update currently available</strong></Text>
+                  <Text size="xs" tone="muted">16 Jul, 10:25 AM</Text>
                 </div>
-                <p className="taf-update-body">
+                <VerticalSpace size="8" />
+                <Text size="s" elementType="p" isMeasured>
                   There aren&rsquo;t any updates on your fault right now. As soon as there is new
                   information, you&rsquo;ll find it here and we&rsquo;ll keep you informed.
-                </p>
+                </Text>
               </div>
 
-              {/* Progress stepper */}
-              <ol className="progress-stepper">
-                {STEPS.map((step, i) => (
-                  <li
-                    key={i}
-                    className={`step${step.active ? " active" : ""}${step.last ? " last" : ""}`}
-                  >
-                    <span className="step-marker" />
-                    <div className="step-content">
-                      <span className="step-title">{step.title}</span>
-                      {step.date && <span className="step-date">{step.date}</span>}
-                      {step.desc && <span className="step-desc">{step.desc}</span>}
-                    </div>
-                  </li>
-                ))}
-              </ol>
+              {/* Progress stepper — Arc component */}
+              <VerticalSpace size="24" />
+              <ProgressStepper direction="vertical" currentStep={0}>
+                <ProgressStepperItem
+                  title="Fault report in progress"
+                  subTitle="08/05/2026"
+                  status="current"
+                  stepContent={<Text size="s">Complete your fault report so we can start investigating the issue.</Text>}
+                />
+                <ProgressStepperItem
+                  title="Fault opened"
+                  status="todo"
+                  stepContent={<Text size="s">We&rsquo;re investigating your fault.</Text>}
+                />
+                <ProgressStepperItem
+                  title="We've identified a fix"
+                  status="todo"
+                  stepContent={<Text size="s">We&rsquo;re applying the fix and monitoring progress to restore your service.</Text>}
+                />
+                <ProgressStepperItem
+                  title="Fault fixed"
+                  status="todo"
+                  stepContent={<Text size="s">Your fault has been fixed. Check your service and let us know if you still need help.</Text>}
+                />
+                <ProgressStepperItem
+                  title="Fault closed"
+                  subTitle="18/05/2026 (est.)"
+                  status="todo"
+                />
+              </ProgressStepper>
             </div>
 
             {/* Your details (right sidebar on L+, after timeline on mobile) */}
             <div className="taf-details-card taf-grid-details results-animate results-row-animate" style={{ animationDelay: "0.4s" }}>
-                <h3 className="taf-details-title">Your details</h3>
+                <h3 className="taf-heading-m">Your details</h3>
+                <VerticalSpace size="16" />
                 <div className="taf-detail-block">
                   <div className="taf-detail-row">
-                    <span className="taf-detail-label">Site address:</span>
+                    <Text size="s"><strong>Site address:</strong></Text>
                     <EditIcon />
                   </div>
-                  <p className="taf-detail-value">1 The Street,<br />Westminister, London<br />SW1 1RY</p>
+                  <VerticalSpace size="8" />
+                  <Text size="s" elementType="p">1 The Street,<br />Westminister, London<br />SW1 1RY</Text>
                 </div>
                 <div className="taf-detail-block">
                   <div className="taf-detail-row">
-                    <span className="taf-detail-label">Contact details:</span>
+                    <Text size="s"><strong>Contact details:</strong></Text>
                     <EditIcon />
                   </div>
-                  <p className="taf-detail-value">Name: <strong>Duke Alexa</strong><br />Phone: <strong>01283424873</strong></p>
+                  <VerticalSpace size="8" />
+                  <Text size="s" elementType="p">Name: <strong>Duke Alexa</strong><br />Phone: <strong>01283424873</strong></Text>
                 </div>
             </div>
           </div>
 
-          {/* Help & support */}
+          {/* Help & support — using Arc Disclosure for FAQ */}
           <section className="taf-section results-animate results-row-animate" style={{ animationDelay: "0.55s" }}>
-            <div className="taf-faq-head">
-              <div>
-                <h2 className="section-title" style={{ marginBottom: 4 }}>Help &amp; support</h2>
-                <p className="taf-faq-sub">Learn more about the online fault process</p>
-              </div>
-            </div>
-            <div className="faq-list">
-              {FAQS.map((faq, i) => (
-                <details className="faq-item" key={i}>
-                  <summary>
-                    {faq.q}
-                    <ChevronDown />
-                  </summary>
-                  <div className="faq-body">{faq.a}</div>
-                </details>
-              ))}
-            </div>
+            <h2 className="taf-heading-m">Help &amp; support</h2>
+            <VerticalSpace size="4" />
+            <Text size="s" tone="muted">Learn more about the online fault process</Text>
+            <VerticalSpace size="24" />
+            {FAQS.map((faq, i) => (
+              <Disclosure key={i} summary={faq.q} headingLevel="3">
+                <Text size="s" elementType="p">{faq.a}</Text>
+              </Disclosure>
+            ))}
           </section>
 
           {/* Track a different fault */}
           <section className="taf-section results-animate results-row-animate" style={{ animationDelay: "0.7s" }}>
-            <h2 className="section-title">Track a different fault</h2>
+            <h2 className="taf-heading-m">Track a different fault</h2>
+            <VerticalSpace size="24" />
 
             {/* Desktop (L+): data table */}
             <div className="taf-table-desktop">
@@ -236,22 +232,22 @@ export function TrackAFaultPage({ onBack }: TrackAFaultPageProps) {
                 <div className="table-scroll">
                   <div className="taf-related-grid">
                     <div className="taf-grid-header">
-                      <div className="cell">Fault reference</div>
-                      <div className="cell">Product</div>
-                      <div className="cell">Service ID</div>
-                      <div className="cell">Fault reported</div>
-                      <div className="cell">Status</div>
-                      <div className="cell">Action</div>
+                      <div className="cell"><Text size="s" tone="muted">Fault reference</Text></div>
+                      <div className="cell"><Text size="s" tone="muted">Product</Text></div>
+                      <div className="cell"><Text size="s" tone="muted">Service ID</Text></div>
+                      <div className="cell"><Text size="s" tone="muted">Fault reported</Text></div>
+                      <div className="cell"><Text size="s" tone="muted">Status</Text></div>
+                      <div className="cell"><Text size="s" tone="muted">Action</Text></div>
                     </div>
                     {tafRelatedRows.map((row, i) => (
                       <div className="taf-grid-row" key={i}>
                         <div className="cell">
                           <TafProductIcon type={row.type} />
-                          <strong>{row.ref}</strong>
+                          <Text size="s"><strong>{row.ref}</strong></Text>
                         </div>
-                        <div className="cell">{row.type}</div>
-                        <div className="cell">{row.id}</div>
-                        <div className="cell">{row.reported}</div>
+                        <div className="cell"><Text size="s">{row.type}</Text></div>
+                        <div className="cell"><Text size="s">{row.id}</Text></div>
+                        <div className="cell"><Text size="s">{row.reported}</Text></div>
                         <div className="cell"><TafStatusBadge status={row.status} /></div>
                         <div className="cell">
                           <ButtonV2
@@ -282,28 +278,32 @@ export function TrackAFaultPage({ onBack }: TrackAFaultPageProps) {
       {/* You might be interested in */}
       <section className="taf-interested results-animate results-row-animate" style={{ animationDelay: "0.85s" }}>
         <div className="container bleed">
-          <h2 className="section-title" style={{ textAlign: "center" }}>You might be interested in</h2>
+          <h2 className="taf-heading-m" style={{ textAlign: "center" }}>You might be interested in</h2>
+          <VerticalSpace size="32" />
           <div className="interested-grid">
             <div className="interested-card">
               <svg className="interested-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M3 10h18" /><rect x="3" y="5" width="18" height="14" rx="2" />
               </svg>
-              <h3>Billing</h3>
-              <p>Find out what to expect from your first BT Business bill, and how to manage your bill online.</p>
+              <Heading level="3" size="xs">Billing</Heading>
+              <VerticalSpace size="8" />
+              <Text size="s">Find out what to expect from your first BT Business bill, and how to manage your bill online.</Text>
             </div>
             <div className="interested-card">
               <svg className="interested-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <circle cx="12" cy="12" r="10" /><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3" /><path d="M12 17h.01" />
               </svg>
-              <h3>Help and support</h3>
-              <p>Need more help with your product or service? View our step-by-step guides, FAQs and video tutorials.</p>
+              <Heading level="3" size="xs">Help and support</Heading>
+              <VerticalSpace size="8" />
+              <Text size="s">Need more help with your product or service? View our step-by-step guides, FAQs and video tutorials.</Text>
             </div>
             <div className="interested-card">
               <svg className="interested-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M14.7 6.3a4 4 0 0 0-5.6 5.6l-5.4 5.4a2 2 0 0 0 2.8 2.8l5.4-5.4a4 4 0 0 0 5.6-5.6l-2.5 2.5-2.1-2.1 2.5-2.5Z" />
               </svg>
-              <h3>Fault and repairs</h3>
-              <p>Check your service performance, or fix or report your service issues online.</p>
+              <Heading level="3" size="xs">Fault and repairs</Heading>
+              <VerticalSpace size="8" />
+              <Text size="s">Check your service performance, or fix or report your service issues online.</Text>
             </div>
           </div>
         </div>

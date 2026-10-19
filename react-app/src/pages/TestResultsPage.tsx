@@ -1,6 +1,8 @@
 import { Alert } from "@arc-ui/components/Alert";
 import { Badge } from "@arc-ui/components/Badge";
 import { ButtonV2 } from "@arc-ui/components/ButtonV2";
+import { Heading } from "@arc-ui/components/Heading";
+import { Text } from "@arc-ui/components/Text";
 import { Breadcrumbs, BreadcrumbsItem, BreadcrumbsLink } from "@arc-ui/components/Breadcrumbs";
 import { BtIconQuestion } from "@arc-ui/icons/BtIconQuestion";
 import { BtIconArrowRight } from "@arc-ui/icons/BtIconArrowRight";
@@ -72,14 +74,14 @@ function ResultActions({
     return (
       <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
         <ButtonV2 label="View help" buttonStyle="primary" icon={BtIconQuestion} onClick={onViewHelp} />
-        <ButtonV2 label="Continue reporting" buttonStyle="secondary" icon={BtIconArrowRight} onClick={onContinueFault} />
+        <ButtonV2 label="Continue reporting" buttonStyle="secondary" icon={BtIconArrowRight} iconPosition="afterText" onClick={onContinueFault} />
       </div>
     );
   }
   if (scenario === "engineer") {
     return (
       <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
-        <ButtonV2 label="Book engineer" buttonStyle="primary" icon={BtIconArrowRight} onClick={onBookEngineer} />
+        <ButtonV2 label="Book engineer" buttonStyle="primary" icon={BtIconArrowRight} iconPosition="afterText" onClick={onBookEngineer} />
       </div>
     );
   }
@@ -87,7 +89,7 @@ function ResultActions({
   return (
     <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
       <ButtonV2 label="View help" buttonStyle="primary" icon={BtIconQuestion} onClick={onViewHelp} />
-      <ButtonV2 label="Continue with fault" buttonStyle="secondary" icon={BtIconArrowRight} onClick={onContinueFault} />
+      <ButtonV2 label="Continue with fault" buttonStyle="secondary" icon={BtIconArrowRight} iconPosition="afterText" onClick={onContinueFault} />
     </div>
   );
 }
@@ -116,33 +118,26 @@ export function TestResultsPage({
   const data: ScenarioData = RESULT_SCENARIOS[scenario];
 
   return (
-    <div className="container bleed" style={{ paddingTop: 40, paddingBottom: 64 }}>
-      {/* Breadcrumbs: Dashboard > Faults (→ back to dashboard) > Test results (current) */}
-      <Breadcrumbs>
-        <BreadcrumbsItem spacerIconAfter>
-          <BreadcrumbsLink href="#">Dashboard</BreadcrumbsLink>
-        </BreadcrumbsItem>
-        <BreadcrumbsItem spacerIconAfter>
-          <BreadcrumbsLink href="#faults" onClick={() => { onBack?.(); }}>Faults</BreadcrumbsLink>
-        </BreadcrumbsItem>
-        <BreadcrumbsItem>
-          <BreadcrumbsLink isActive>Test results</BreadcrumbsLink>
-        </BreadcrumbsItem>
-      </Breadcrumbs>
+    <div className="container bleed" style={{ paddingBottom: 64 }}>
+      {/* Hero header: breadcrumbs + heading + service info */}
+      <div className="hero-header">
+        <Breadcrumbs>
+          <BreadcrumbsItem spacerIconAfter>
+            <BreadcrumbsLink href="#">Dashboard</BreadcrumbsLink>
+          </BreadcrumbsItem>
+          <BreadcrumbsItem spacerIconAfter>
+            <BreadcrumbsLink href="#faults" onClick={() => { onBack?.(); }}>Faults</BreadcrumbsLink>
+          </BreadcrumbsItem>
+          <BreadcrumbsItem>
+            <BreadcrumbsLink isActive>Test results</BreadcrumbsLink>
+          </BreadcrumbsItem>
+        </Breadcrumbs>
 
-      {/* Heading + service info (gap: 16px between heading and service, 56px to results) */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 32 }}>
-        <h1 style={{ fontSize: 40, fontWeight: 500, lineHeight: "48px", color: "#2A2A2A" }}>
-          Your test results
-        </h1>
-        <div style={{ fontSize: 16, lineHeight: "24px" }}>
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <span style={{ color: "#2A2A2A" }}>Service ID:</span>
-            <span style={{ fontWeight: 500, color: "#434343" }}>{serviceId}</span>
-          </div>
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <span style={{ color: "#2A2A2A" }}>Location:</span>
-            <span style={{ fontWeight: 500, color: "#434343" }}>{serviceAddr}</span>
+        <div className="hero-header-text">
+          <Heading level="1" size="xl" fontStyle="display-standard">Your test results</Heading>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <Text size="m"><Text size="m" isInline>Service ID:</Text> <Text size="m" isInline><strong>{serviceId}</strong></Text></Text>
+            <Text size="m"><Text size="m" isInline>Location:</Text> <Text size="m" isInline><strong>{serviceAddr}</strong></Text></Text>
           </div>
         </div>
       </div>
@@ -186,12 +181,8 @@ export function TestResultsPage({
             >
               <CheckIcon state={result.state} />
               <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
-                <span style={{ fontSize: 16, fontWeight: 500, lineHeight: "24px", color: "#2A2A2A" }}>
-                  {result.name}
-                </span>
-                <span style={{ fontSize: 14, lineHeight: "20px", color: "#434343" }}>
-                  {result.detail}
-                </span>
+                <Text size="m"><strong>{result.name}</strong></Text>
+                <Text size="s" tone="muted">{result.detail}</Text>
               </div>
               <CheckBadge state={result.state} />
             </div>

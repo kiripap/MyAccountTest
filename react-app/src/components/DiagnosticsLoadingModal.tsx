@@ -1,4 +1,9 @@
 import { useEffect, useRef } from "react";
+import { Heading } from "@arc-ui/components/Heading";
+import { Text } from "@arc-ui/components/Text";
+import { Spinner } from "@arc-ui/components/Spinner";
+import { Rule } from "@arc-ui/components/Rule";
+import { VerticalSpace } from "@arc-ui/components/VerticalSpace";
 
 const DIAG_ITEMS = [
   "Major service outages...",
@@ -18,17 +23,12 @@ export function DiagnosticsLoadingModal({ isOpen, delayMs, onComplete }: Diagnos
   const itemsRef = useRef<(HTMLLIElement | null)[]>([]);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = isOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
-
     timersRef.current.forEach(clearTimeout);
     timersRef.current = [];
     itemsRef.current.forEach((el) => el?.classList.remove("revealed"));
@@ -39,82 +39,55 @@ export function DiagnosticsLoadingModal({ isOpen, delayMs, onComplete }: Diagnos
 
     DIAG_ITEMS.forEach((_, i) => {
       const t = interval * (i + 1);
-      const timer = setTimeout(() => {
+      timersRef.current.push(setTimeout(() => {
         itemsRef.current[i]?.classList.add("revealed");
-      }, reduceMotion ? 0 : t);
-      timersRef.current.push(timer);
+      }, reduceMotion ? 0 : t));
     });
 
-    const completeTimer = setTimeout(onComplete, delayMs);
-    timersRef.current.push(completeTimer);
-
-    return () => {
-      timersRef.current.forEach(clearTimeout);
-      timersRef.current = [];
-    };
+    timersRef.current.push(setTimeout(onComplete, delayMs));
+    return () => { timersRef.current.forEach(clearTimeout); timersRef.current = []; };
   }, [isOpen, delayMs, onComplete]);
 
   if (!isOpen) return null;
 
   return (
     <div
-      className="modal-overlay-enter"
       style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 1000,
-        background: "rgba(0,0,0,0.45)",
-        display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        padding: "80px 24px 24px",
-        overflowY: "auto",
+        position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.45)",
+        display: "flex", alignItems: "flex-start", justifyContent: "center",
+        padding: "80px 24px 24px", overflowY: "auto",
       }}
     >
       <div
-        className="modal-dialog-enter"
         role="alertdialog"
         aria-modal="true"
-        aria-labelledby="diagHeading"
         style={{
-          background: "white",
-          borderRadius: 24,
-          padding: 44,
-          width: "100%",
-          maxWidth: 640,
-          position: "relative",
-          boxShadow: "0 12px 48px rgba(0,0,0,0.16)",
-          display: "flex",
-          flexDirection: "column",
-          gap: 24,
+          background: "white", borderRadius: 24, padding: 44, width: "100%", maxWidth: 640,
+          position: "relative", boxShadow: "0 12px 48px rgba(0,0,0,0.16)",
+          display: "flex", flexDirection: "column", gap: 24,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div className="arc-spinner" role="status" aria-label="Running checks" />
-          <h2 id="diagHeading" style={{ fontSize: 32, fontWeight: 500, lineHeight: "40px", color: "#2A2A2A" }}>
-            We&rsquo;re running further checks
-          </h2>
+          <Spinner size="s" />
+          <Heading level="2" size="m" isResponsive={false}>We&rsquo;re running further checks</Heading>
         </div>
 
         <div aria-live="polite">
-          <p style={{ fontSize: 16, fontWeight: 500, marginBottom: 16, color: "#2A2A2A" }}>
-            We&rsquo;re checking:
-          </p>
+          <Text size="m"><strong>We&rsquo;re checking:</strong></Text>
+          <VerticalSpace size="16" />
           <ul className="diag-list">
             {DIAG_ITEMS.map((label, i) => (
-              <li
-                key={i}
-                className="diag-item"
-                ref={(el) => { itemsRef.current[i] = el; }}
-              >
-                {label}
+              <li key={i} className="diag-item" ref={(el) => { itemsRef.current[i] = el; }}>
+                <Text size="m">{label}</Text>
               </li>
             ))}
           </ul>
-          <hr style={{ border: "none", borderTop: "1px solid #C8C8C8", margin: "24px 0" }} />
-          <p style={{ fontSize: 14, lineHeight: "20px", color: "#434343" }}>
+          <VerticalSpace size="24" />
+          <Rule />
+          <VerticalSpace size="24" />
+          <Text size="s" tone="muted" elementType="p">
             This can take a couple of minutes. Please keep this page open while we complete the checks.
-          </p>
+          </Text>
         </div>
       </div>
     </div>
