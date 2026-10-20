@@ -42,8 +42,6 @@ interface ReportFaultModalProps {
   diagnosticsDelayMs: number;
   onClose: () => void;
   onDiagnosticsComplete: () => void;
-  onDuplicateFound?: () => void;
-  duplicateFound?: boolean;
 }
 
 export function ReportFaultModal({
@@ -52,11 +50,10 @@ export function ReportFaultModal({
   diagnosticsDelayMs,
   onClose,
   onDiagnosticsComplete,
-  onDuplicateFound,
-  duplicateFound,
 }: ReportFaultModalProps) {
   const [phase, setPhase] = useState<Phase>("symptom");
   const [selected, setSelected] = useState("");
+  const [showError, setShowError] = useState(false);
   const [contentFading, setContentFading] = useState(false);
 
   const diagTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -78,6 +75,7 @@ export function ReportFaultModal({
     if (isOpen) {
       setPhase("symptom");
       setSelected("");
+      setShowError(false);
       setContentFading(false);
     }
   }, [isOpen]);
@@ -114,11 +112,10 @@ export function ReportFaultModal({
   }, [phase, diagnosticsDelayMs, onDiagnosticsComplete]);
 
   const handleSubmit = useCallback(() => {
-    if (!selected) return;
-    if (duplicateFound) { onDuplicateFound?.(); return; }
+    if (!selected) { setShowError(true); return; }
     setContentFading(true);
     setTimeout(() => { setPhase("loading"); setContentFading(false); }, 250);
-  }, [selected, duplicateFound, onDuplicateFound]);
+  }, [selected]);
 
   if (!isOpen) return null;
 
@@ -178,8 +175,13 @@ export function ReportFaultModal({
               label="Select the symptom you're experiencing"
               name="symptom"
               size="s"
+              isRequired
               checkedValue={selected}
-              onChange={(e) => setSelected((e.target as HTMLInputElement).value)}
+              errorMessage={showError ? "Select an option before running a test." : undefined}
+              onChange={(e) => {
+                setSelected((e.target as HTMLInputElement).value);
+                setShowError(false);
+              }}
             >
               {SYMPTOMS.map((s) => (
                 <RadioGroupInput key={s.id} id={s.id} label={s.label} value={s.value} />
@@ -187,7 +189,7 @@ export function ReportFaultModal({
             </RadioGroup>
 
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <ButtonV2 label="Run test" buttonStyle="primary" onClick={selected ? handleSubmit : undefined} />
+              <ButtonV2 label="Run test" buttonStyle="primary" onClick={handleSubmit} />
             </div>
 
             <Disclosure summary="Guidance on different issues" headingLevel="3">

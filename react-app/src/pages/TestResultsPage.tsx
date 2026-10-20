@@ -1,7 +1,6 @@
 import { Alert } from "@arc-ui/components/Alert";
 import { Badge } from "@arc-ui/components/Badge";
 import { ButtonV2 } from "@arc-ui/components/ButtonV2";
-import { Heading } from "@arc-ui/components/Heading";
 import { Text } from "@arc-ui/components/Text";
 import { Breadcrumbs, BreadcrumbsItem, BreadcrumbsLink } from "@arc-ui/components/Breadcrumbs";
 import { BtIconQuestion } from "@arc-ui/icons/BtIconQuestion";
@@ -134,7 +133,7 @@ export function TestResultsPage({
         </Breadcrumbs>
 
         <div className="hero-header-text">
-          <Heading level="1" size="xl" fontStyle="display-standard">Your test results</Heading>
+          <h1 className="hero-h1-40">Your test results</h1>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <Text size="m"><Text size="m" isInline>Service ID:</Text> <Text size="m" isInline><strong>{serviceId}</strong></Text></Text>
             <Text size="m"><Text size="m" isInline>Location:</Text> <Text size="m" isInline><strong>{serviceAddr}</strong></Text></Text>
@@ -142,8 +141,8 @@ export function TestResultsPage({
         </div>
       </div>
 
-      {/* Result summary (56px gap from heading section) */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 56 }}>
+      {/* Result summary (56px gap from heading via hero-header padding-bottom) */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {/* Arc Alert — animates in first */}
         <div className="results-animate results-alert-animate">
           <Alert

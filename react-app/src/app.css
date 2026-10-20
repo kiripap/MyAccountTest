@@ -90,21 +90,29 @@ body {
 }
 
 /* ─────────────── PAGE HEADER ─────────────── */
-/* Shared hero header: breadcrumbs + heading + supporting copy in one flex column */
+/* Shared hero header: breadcrumbs + heading + supporting copy in one flex column
+   Spacing: 40px nav→breadcrumbs (padding-top), 32px breadcrumbs→heading (gap),
+   8px heading→supporting copy (hero-header-text gap), 56px heading→content (padding-bottom) */
 .hero-header {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding-top: 24px;
-  padding-bottom: 40px;
+  gap: 32px;
+  padding-top: 40px;
+  padding-bottom: 56px;
 }
-@media (min-width: 768px) { .hero-header { gap: 24px; } }
 
 /* Text block inside hero: heading + supporting copy */
 .hero-header-text {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* Test results h1 — fixed 40px/48px Headline (Arc tablet-semi-xl token) */
+.hero-h1-40 {
+  font: var(--sem-type-tablet-semi-xl, 500 40px/48px 'BT Curve');
+  color: var(--text-primary);
+  margin: 0;
 }
 
 /* Legacy page-header kept for loading/results views that still use it */
@@ -283,7 +291,7 @@ body {
 .table-grid { display: grid; grid-template-columns: 1fr 180px 330px 220px 200px; min-width: 980px; }
 .grid-header { display: contents; }
 .grid-header .cell {
-  background: var(--surface-neutral); border-top: 1px solid var(--border-neutral);
+  background: var(--surface-neutral);
   border-bottom: 1px solid var(--border-neutral); padding: 16px; height: 56px;
   display: flex; align-items: center; gap: 4px; font-size: 16px; font-weight: 500;
 }

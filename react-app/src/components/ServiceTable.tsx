@@ -3,12 +3,14 @@ import type { ServiceRow } from "../data/mockData";
 import { ButtonV2 } from "@arc-ui/components/ButtonV2";
 import { Text } from "@arc-ui/components/Text";
 import { Badge } from "@arc-ui/components/Badge";
-import { Select } from "@arc-ui/components/Select";
+import { ComboBox } from "@arc-ui/components/ComboBox";
+import { TextInput } from "@arc-ui/components/TextInput";
 import { Pagination } from "@arc-ui/components/Pagination";
 import { Rule } from "@arc-ui/components/Rule";
 import { BtIconBroadband } from "@arc-ui/icons/BtIconBroadband";
 import { BtIconPhone } from "@arc-ui/icons/BtIconPhone";
 import { BtIconLocation } from "@arc-ui/icons/BtIconLocation";
+import { BtIconSearch } from "@arc-ui/icons/BtIconSearch";
 
 /* ─── Row icons using Arc icon data URIs ─── */
 const ProductIcon = ({ type }: { type: ServiceRow["type"] }) => (
@@ -69,8 +71,10 @@ export function ServiceTable({
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      result = result.filter(
-        (r) => r.id.toLowerCase().includes(q) || r.addr.toLowerCase().includes(q)
+      // Search across every category/content in the table
+      result = result.filter((r) =>
+        [r.type, r.id, r.addr, r.status ?? ""]
+          .some((field) => field.toLowerCase().includes(q))
       );
     }
     return result;
@@ -79,8 +83,13 @@ export function ServiceTable({
   const totalPages = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
   const pageRows = filteredRows.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  const handleFilterChange = (value: string) => {
-    setProductFilter(value as "all" | "Broadband" | "Phone line");
+  const handleFilterChange = (value: string | string[] | null) => {
+    const v = Array.isArray(value) ? value[0] : value;
+    if (!v || v === "All products") {
+      setProductFilter("all");
+    } else {
+      setProductFilter(v as "Broadband" | "Phone line");
+    }
     setCurrentPage(1);
   };
 
@@ -107,30 +116,31 @@ export function ServiceTable({
         <ButtonV2 label="Get started" buttonStyle="secondary" />
       </div>
 
-      {/* ─── Filters — Arc TextInput + Arc Select ─── */}
+      {/* ─── Filters — Arc TextInput (search) + Arc ComboBox (product) ─── */}
       <div className="filters-row">
         <div className="filter-field">
-          <div className="arc-search-field">
-            <input
-              type="text"
-              placeholder="Search Service ID or Address"
-              value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-              className="arc-search-input"
-            />
-          </div>
+          <TextInput
+            id="table-search"
+            name="table-search"
+            label="Search"
+            leadingSlot={
+              <span style={{ display: "flex", alignItems: "center", height: "100%" }}>
+                <img src={BtIconSearch} alt="" style={{ width: 24, height: 24, flexShrink: 0 }} />
+              </span>
+            }
+            value={searchQuery}
+            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+          />
         </div>
         <div className="filter-field">
-          <Select
+          <ComboBox
+            id="product-filter"
             name="product-filter"
             label="Product"
-            placeholder="All products"
-            value={productFilter}
-            options={[
-              { name: "All products", value: "all" },
-              { name: "Broadband", value: "Broadband" },
-              { name: "Phone line", value: "Phone line" },
-            ]}
+            listBoxAriaLabel="Filter by product"
+            options={["All products", "Broadband", "Phone line"]}
+            defaultValue="All products"
+            isAutocomplete
             onChange={handleFilterChange}
             isFluid
           />

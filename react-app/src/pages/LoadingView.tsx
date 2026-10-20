@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { Lottie } from "lottie-react";
+import { Text } from "@arc-ui/components/Text";
+import { Spinner } from "@arc-ui/components/Spinner";
+import { Breadcrumbs, BreadcrumbsItem, BreadcrumbsLink } from "@arc-ui/components/Breadcrumbs";
 import { ArcContentSwitcher } from "../components/ArcContentSwitcher";
 import { ServiceTable } from "../components/ServiceTable";
 import { loadingRows } from "../data/mockData";
@@ -14,8 +17,8 @@ const CAPTIONS = [
 ];
 
 const SWITCHER_TABS = [
-  { label: "All your services", value: "all" },
-  { label: "Track a fault", value: "track" },
+  { label: "All services", value: "all" },
+  { label: "Faults", value: "faults" },
 ];
 
 export function LoadingView() {
@@ -31,9 +34,21 @@ export function LoadingView() {
 
   return (
     <div className="container bleed">
-      <div className="page-header">
-        <h1>Checking faults</h1>
-        <p>We&rsquo;re running initial checks on your services. This should take less than a minute.</p>
+      {/* Hero header: Dashboard > Faults breadcrumb + heading + supporting copy */}
+      <div className="hero-header">
+        <Breadcrumbs>
+          <BreadcrumbsItem spacerIconAfter>
+            <BreadcrumbsLink href="#">Dashboard</BreadcrumbsLink>
+          </BreadcrumbsItem>
+          <BreadcrumbsItem>
+            <BreadcrumbsLink href="#" aria-current="page">Faults</BreadcrumbsLink>
+          </BreadcrumbsItem>
+        </Breadcrumbs>
+
+        <div className="hero-header-text">
+          <h1 className="hero-h1-40">Checking faults</h1>
+          <Text size="m" elementType="p">We&rsquo;re running initial checks on your services. This should take less than a minute.</Text>
+        </div>
       </div>
 
       <main className="main">
@@ -63,12 +78,12 @@ export function LoadingView() {
           </div>
 
           <div className="loading-caption">
-            <div className="arc-spinner" role="status" aria-label="Loading" />
+            <Spinner size="s" />
             <div className="caption-text" aria-live="polite">
               {CAPTIONS.map((cap, i) => (
                 <div className={`caption-item${i === phase ? " active" : ""}`} key={i}>
-                  <div className="caption-title">{cap.title}</div>
-                  <div className="caption-desc">{cap.desc}</div>
+                  <Text size="m"><strong>{cap.title}</strong></Text>
+                  <Text size="s" tone="muted">{cap.desc}</Text>
                 </div>
               ))}
             </div>

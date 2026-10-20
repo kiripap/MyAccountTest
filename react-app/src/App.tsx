@@ -7,7 +7,6 @@ import { ReportFaultModal } from "./components/ReportFaultModal";
 import { LoadingView } from "./pages/LoadingView";
 import { ResultsView } from "./pages/ResultsView";
 import { TrackAFaultPage } from "./pages/TrackAFaultPage";
-import { DuplicateView } from "./pages/DuplicateView";
 import { TestResultsPage } from "./pages/TestResultsPage";
 
 import type { Scenario, MockConfig, ServiceRow, ResultsVariant } from "./data/mockData";
@@ -35,7 +34,7 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
 }
 
 /* ─── Screen type ─── */
-type Screen = "loading" | "results" | "taf" | "duplicate" | "testResults";
+type Screen = "loading" | "results" | "taf" | "testResults";
 
 const LOADING_DURATION = 20_000;
 
@@ -73,12 +72,6 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
-  const handleDuplicateFound = useCallback(() => {
-    setShowReportModal(false);
-    setScreen("duplicate");
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, []);
-
   const handleViewProgress = useCallback(() => {
     setScreen("taf");
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -94,11 +87,6 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
-  const handleViewExistingResult = useCallback(() => {
-    setScreen("testResults");
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, []);
-
   /* ─── Dev scenario switcher ─── */
   const [switcherOpen, setSwitcherOpen] = useState(false);
 
@@ -108,10 +96,6 @@ export default function App() {
 
   const updateResultsVariant = useCallback((v: ResultsVariant) => {
     setMockConfig((prev) => ({ ...prev, resultsVariant: v }));
-  }, []);
-
-  const toggleDuplicate = useCallback(() => {
-    setMockConfig((prev) => ({ ...prev, duplicateFound: !prev.duplicateFound }));
   }, []);
 
   const skipToScreen = useCallback((s: Screen) => {
@@ -139,14 +123,6 @@ export default function App() {
         );
       case "taf":
         return <TrackAFaultPage onBack={handleBackToResults} />;
-      case "duplicate":
-        return (
-          <DuplicateView
-            serviceId={selectedService?.id ?? "01168222981"}
-            onBack={handleBackToResults}
-            onViewResult={handleViewExistingResult}
-          />
-        );
       case "testResults":
         return (
           <TestResultsPage
@@ -164,8 +140,8 @@ export default function App() {
   }
 
   return (
-    <div className="arc-ds-sys-theme arc-ds-sys-theme--bt-business arc-ds-sys-icons--bt arc-v13-16-0">
-      <div className="arc">
+    <div className="arc-v13-16-0">
+      <div className="arc-ds-sys-theme arc-ds-sys-theme--bt-business arc-ds-sys-icons--bt arc">
         <div className="page">
           <ArcNav />
 
@@ -183,8 +159,6 @@ export default function App() {
           diagnosticsDelayMs={mockConfig.diagnosticsDelayMs}
           onClose={() => setShowReportModal(false)}
           onDiagnosticsComplete={handleDiagComplete}
-          duplicateFound={mockConfig.duplicateFound}
-          onDuplicateFound={handleDuplicateFound}
         />
 
         {/* Dev scenario switcher — minimized by default */}
@@ -200,7 +174,7 @@ export default function App() {
             <>
               <div className="dev-switcher-row">
                 <span>Screen:</span>
-                {(["loading", "results", "taf", "duplicate", "testResults"] as Screen[]).map((s) => (
+                {(["loading", "results", "taf", "testResults"] as Screen[]).map((s) => (
                   <button
                     key={s}
                     className={screen === s ? "active" : ""}
@@ -233,15 +207,6 @@ export default function App() {
                     {s}
                   </button>
                 ))}
-              </div>
-              <div className="dev-switcher-row">
-                <span>Duplicate:</span>
-                <button
-                  className={mockConfig.duplicateFound ? "active" : ""}
-                  onClick={toggleDuplicate}
-                >
-                  {mockConfig.duplicateFound ? "ON" : "OFF"}
-                </button>
               </div>
             </>
           )}
