@@ -28,10 +28,10 @@ const GUIDANCE = [
 ];
 
 const DIAG_ITEMS = [
-  "Major service outages...",
-  "Your broadband connection...",
-  "Your internal wiring...",
-  "The external network...",
+  "Service status",
+  "The external network",
+  "Your broadband connection",
+  "Internal wiring",
 ];
 
 type Phase = "symptom" | "loading";
@@ -207,10 +207,10 @@ export function ReportFaultModal({
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <Spinner size="s" />
-              <Heading level="2" size="m" isResponsive={false}>We&rsquo;re running further checks</Heading>
+              <Heading level="2" size="m" isResponsive={false}>Running broadband tests</Heading>
             </div>
             <div aria-live="polite">
-              <Text size="m"><strong>We&rsquo;re checking:</strong></Text>
+              <Text size="m"><strong>We&rsquo;re checking what might be causing the issue:</strong></Text>
               <VerticalSpace size="16" />
               <ul className="diag-list">
                 {DIAG_ITEMS.map((label, i) => (
@@ -227,7 +227,7 @@ export function ReportFaultModal({
               <Rule />
               <VerticalSpace size="24" />
               <Text size="s" tone="muted" elementType="p">
-                This can take a couple of minutes. Please keep this page open while we complete the checks.
+                This may take a few minutes. Keep this page open to view your results.
               </Text>
             </div>
           </div>

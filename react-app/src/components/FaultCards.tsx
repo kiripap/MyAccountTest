@@ -66,7 +66,7 @@ export function FaultCards({ variant = "single-card", onStartFixing, onTakeActio
               <ServiceHeading />
               <AddressRow />
               <Text size="m" elementType="p">
-                Our checks have found that this service is offline and has dropped connection in the last 24 hours. You need to run further tests to fix the issue.
+                <strong>Broadband keeps dropping.</strong> Your connection has dropped in the last 24 hours. Let&rsquo;s run a few more checks to find out why.
               </Text>
               <div style={{ flex: 1 }} />
               <ButtonV2 label="Start fixing" buttonStyle="primary" isFullWidth icon={BtIconSpanner} iconPosition="beforeText" onClick={onStartFixing} />
