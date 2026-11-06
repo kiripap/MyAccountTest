@@ -429,13 +429,136 @@ body {
 .taf-grid-row:last-child .cell { border-bottom: none; }
 .taf-grid-row .cell svg.row-icon { width: 24px; height: 24px; color: var(--indigo-800); flex-shrink: 0; }
 
-.taf-interested { background: #F3EDFB; margin-top: 64px; padding: 48px 0; }
-.interested-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--grid-gutter); margin-top: 32px; }
-@media (max-width: 1023px) { .interested-grid { grid-template-columns: 1fr; } }
-.interested-card { background: white; border-radius: 16px; padding: 24px; }
-.interested-icon { width: 32px; height: 32px; color: var(--indigo-800); margin-bottom: 16px; }
-.interested-card h3 { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
-.interested-card p { font-size: 14px; line-height: 20px; color: var(--text-secondary); }
+/* Tighten Arc ProgressStepper vertical spacing between subtitle (date) and description — matches Figma */
+.taf-progress-card .arc-ProgressStepperItem--vertical .arc-ProgressStepperItem-subTitle {
+  margin-bottom: 8px;
+}
+
+/* ─── Help & support FAQ (matches Figma node 17642:129754) ─── */
+.taf-faq {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.taf-faq-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+.taf-faq-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 0 0;
+  min-width: 0;
+}
+.taf-faq-header-text p { color: var(--text-secondary); }
+.taf-faq-illustration {
+  width: 134px;
+  height: 92px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+@media (max-width: 635px) { .taf-faq-illustration { display: none; } }
+.taf-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.taf-faq-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.taf-faq-item-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 16px;
+  background: var(--surface-neutral-02, #F0F0F0);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'BT Curve', sans-serif;
+}
+.taf-faq-item-question {
+  flex: 1 0 0;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--text-primary);
+}
+.taf-faq-item-chevron {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--indigo-800);
+  transition: transform 0.2s ease;
+}
+.taf-faq-item-chevron.open { transform: rotate(180deg); }
+.taf-faq-item-body {
+  padding: 16px;
+  color: var(--text-secondary);
+}
+
+/* ─── You might be interested in (matches Figma node 17642:125455) ─── */
+/* Full-bleed pink band: background spans the full viewport width (edge to edge),
+   only top corners rounded. */
+.interested-band {
+  background: #EFE5F7;
+  border-radius: 32px 32px 0 0;
+  margin-top: 64px;
+  width: 100%;
+}
+/* Inner content constrained to the 1440px container with responsive side padding (section margin),
+   and 24px top/bottom padding — matches Figma. .container.bleed already provides max-width + side padding. */
+.interested-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+/* XS and S keep a contained look with side margins + all corners rounded.
+   The band provides the side gap; the inner panel drops its bleed padding to 16px to avoid doubling. */
+@media (max-width: 767px) {
+  .interested-band {
+    border-radius: 24px;
+    margin-left: var(--section-margin);
+    margin-right: var(--section-margin);
+    width: auto;
+  }
+  .interested-panel {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+.interested-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .interested-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+}
+.interested-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.interested-icon { width: 32px; height: 32px; display: block; flex-shrink: 0; }
+.interested-card-text { display: flex; flex-direction: column; gap: 2px; }
+.interested-card-title { font-size: 16px; font-weight: 500; line-height: 24px; color: var(--text-primary); }
+.interested-card-desc { font-size: 14px; font-weight: 400; line-height: 20px; color: var(--text-secondary); }
 
 /* ─────────────── DIAGNOSTICS LIST (used inside Arc Modal) ─────────────── */
 .diag-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
@@ -823,13 +946,4 @@ body {
 @media (min-width: 1440px) { .taf-section { margin-top: 72px; } }
 @media (min-width: 1920px) { .taf-section { margin-top: 96px; } }
 
-/* Interested in grid */
-.interested-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  margin-top: 32px;
-}
-@media (min-width: 768px) {
-  .interested-grid { grid-template-columns: repeat(3, 1fr); gap: var(--grid-gutter); }
-}
+/* (Interested-in grid styles consolidated in the TAF section above) */

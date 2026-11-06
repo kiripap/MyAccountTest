@@ -1,4 +1,5 @@
 import { tafRelatedRows } from "../data/mockData";
+import { useState } from "react";
 import type { TafRelatedRow } from "../data/mockData";
 import { ButtonV2 } from "@arc-ui/components/ButtonV2";
 import { Badge } from "@arc-ui/components/Badge";
@@ -6,13 +7,15 @@ import { Heading } from "@arc-ui/components/Heading";
 import { Text } from "@arc-ui/components/Text";
 import { Breadcrumbs, BreadcrumbsItem, BreadcrumbsLink } from "@arc-ui/components/Breadcrumbs";
 import { ProgressStepper, ProgressStepperItem } from "@arc-ui/components/ProgressStepper";
-import { Disclosure } from "@arc-ui/components/Disclosure";
 import { Rule } from "@arc-ui/components/Rule";
 import { VerticalSpace } from "@arc-ui/components/VerticalSpace";
 import { BtIconBroadband } from "@arc-ui/icons/BtIconBroadband";
 import { BtIconPhone } from "@arc-ui/icons/BtIconPhone";
 import { BtIconAlertTriangle } from "@arc-ui/icons/BtIconAlertTriangle";
 import { BtIconSignature } from "@arc-ui/icons/BtIconSignature";
+import { BtIconSpeedFastest } from "@arc-ui/icons/BtIconSpeedFastest";
+import { BtIconQuestion } from "@arc-ui/icons/BtIconQuestion";
+import { BtIconSpanner } from "@arc-ui/icons/BtIconSpanner";
 
 interface TrackAFaultPageProps {
   onBack: () => void;
@@ -33,6 +36,38 @@ const FAQS = [
   { q: "What does \u2018Action needed\u2019 mean?", a: "\u2018Action needed\u2019 means we need something from you before we can continue \u2014 for example, finishing your fault report or confirming an appointment." },
   { q: "What happens if my service still isn\u2019t working but the fault has been closed?", a: "If your service still isn\u2019t working after a fault is closed, you can reopen it or report a new fault and we\u2019ll investigate again." },
 ];
+
+/* ─── FAQ accordion item (matches Figma node 17642:129762) ─── */
+function TafFaqItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="taf-faq-item">
+      <button
+        type="button"
+        className="taf-faq-item-header"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span className="taf-faq-item-question">{question}</span>
+        <svg
+          className={`taf-faq-item-chevron${open ? " open" : ""}`}
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          aria-hidden="true"
+        >
+          <path d="M4 6l4 4 4-4" />
+        </svg>
+      </button>
+      {open && (
+        <div className="taf-faq-item-body">
+          <Text size="s" elementType="p">{answer}</Text>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function TafStatusBadge({ status }: { status: TafRelatedRow["status"] }) {
   if (status === "In progress") return <Badge state="default">In progress</Badge>;
@@ -142,11 +177,10 @@ export function TrackAFaultPage({ onBack }: TrackAFaultPageProps) {
               </div>
 
               <div className="taf-update-box">
-                <div className="taf-update-head">
-                  <Text size="s"><strong>No update currently available</strong></Text>
-                  <Text size="xs" tone="muted">16 Jul, 10:25 AM</Text>
-                </div>
-                <VerticalSpace size="8" />
+                <Text size="s" tone="muted">16 Jul, 10:25 AM</Text>
+                <VerticalSpace size="12" />
+                <h3 className="taf-heading-m" style={{ color: "var(--text-tertiary)" }}>No update currently available</h3>
+                <VerticalSpace size="12" />
                 <Text size="s" elementType="p" isMeasured>
                   There aren&rsquo;t any updates on your fault right now. As soon as there is new
                   information, you&rsquo;ll find it here and we&rsquo;ll keep you informed.
@@ -208,17 +242,20 @@ export function TrackAFaultPage({ onBack }: TrackAFaultPageProps) {
             </div>
           </div>
 
-          {/* Help & support — using Arc Disclosure for FAQ */}
-          <section className="taf-section results-animate results-row-animate" style={{ animationDelay: "0.55s" }}>
-            <h2 className="taf-heading-m">Help &amp; support</h2>
-            <VerticalSpace size="4" />
-            <Text size="s" tone="muted">Learn more about the online fault process</Text>
-            <VerticalSpace size="24" />
-            {FAQS.map((faq, i) => (
-              <Disclosure key={i} summary={faq.q} headingLevel="3">
-                <Text size="s" elementType="p">{faq.a}</Text>
-              </Disclosure>
-            ))}
+          {/* Help & support — Figma FAQ layout with headphones illustration */}
+          <section className="taf-section taf-faq results-animate results-row-animate" style={{ animationDelay: "0.55s" }}>
+            <div className="taf-faq-header">
+              <div className="taf-faq-header-text">
+                <h2 className="taf-heading-m">Help &amp; support</h2>
+                <Text size="m" tone="muted" elementType="p">Learn more about the online fault process</Text>
+              </div>
+              <img className="taf-faq-illustration" src="/img/headphones.png" alt="" />
+            </div>
+            <div className="taf-faq-list">
+              {FAQS.map((faq, i) => (
+                <TafFaqItem key={i} question={faq.q} answer={faq.a} />
+              ))}
+            </div>
           </section>
 
           {/* Track a different fault */}
@@ -275,35 +312,32 @@ export function TrackAFaultPage({ onBack }: TrackAFaultPageProps) {
         </main>
       </div>
 
-      {/* You might be interested in */}
-      <section className="taf-interested results-animate results-row-animate" style={{ animationDelay: "0.85s" }}>
-        <div className="container bleed">
+      {/* You might be interested in — full-bleed pink band, inner content constrained to container.
+          Matches Figma node 17642:125455 */}
+      <section className="interested-band results-animate results-row-animate" style={{ animationDelay: "0.85s" }}>
+        <div className="container bleed interested-panel">
           <h2 className="taf-heading-m" style={{ textAlign: "center" }}>You might be interested in</h2>
-          <VerticalSpace size="32" />
           <div className="interested-grid">
             <div className="interested-card">
-              <svg className="interested-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M3 10h18" /><rect x="3" y="5" width="18" height="14" rx="2" />
-              </svg>
-              <Heading level="3" size="xs">Billing</Heading>
-              <VerticalSpace size="8" />
-              <Text size="s">Find out what to expect from your first BT Business bill, and how to manage your bill online.</Text>
+              <img className="interested-icon" src={BtIconSpeedFastest} alt="" />
+              <div className="interested-card-text">
+                <h3 className="interested-card-title">Billing</h3>
+                <p className="interested-card-desc">Find out what to expect from your first BT Business bill, and how to manage your bill online.</p>
+              </div>
             </div>
             <div className="interested-card">
-              <svg className="interested-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <circle cx="12" cy="12" r="10" /><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3" /><path d="M12 17h.01" />
-              </svg>
-              <Heading level="3" size="xs">Help and support</Heading>
-              <VerticalSpace size="8" />
-              <Text size="s">Need more help with your product or service? View our step-by-step guides, FAQs and video tutorials.</Text>
+              <img className="interested-icon" src={BtIconQuestion} alt="" />
+              <div className="interested-card-text">
+                <h3 className="interested-card-title">Help and support</h3>
+                <p className="interested-card-desc">Need more help with your product or service? View our step-by-step guides, FAQs and video tutorials.</p>
+              </div>
             </div>
             <div className="interested-card">
-              <svg className="interested-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M14.7 6.3a4 4 0 0 0-5.6 5.6l-5.4 5.4a2 2 0 0 0 2.8 2.8l5.4-5.4a4 4 0 0 0 5.6-5.6l-2.5 2.5-2.1-2.1 2.5-2.5Z" />
-              </svg>
-              <Heading level="3" size="xs">Fault and repairs</Heading>
-              <VerticalSpace size="8" />
-              <Text size="s">Check your service performance, or fix or report your service issues online.</Text>
+              <img className="interested-icon" src={BtIconSpanner} alt="" />
+              <div className="interested-card-text">
+                <h3 className="interested-card-title">Fault and repairs</h3>
+                <p className="interested-card-desc">Check your service performance, or fix or report your service issues online.</p>
+              </div>
             </div>
           </div>
         </div>
