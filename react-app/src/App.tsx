@@ -8,6 +8,8 @@ import { LoadingView } from "./pages/LoadingView";
 import { ResultsView } from "./pages/ResultsView";
 import { TrackAFaultPage } from "./pages/TrackAFaultPage";
 import { TestResultsPage } from "./pages/TestResultsPage";
+import { OnboardingPage } from "./onboarding/OnboardingPage";
+import { OnboardingDrawer } from "./onboarding/OnboardingDrawer";
 
 import type { Scenario, MockConfig, ServiceRow, ResultsVariant } from "./data/mockData";
 import { defaultMockConfig } from "./data/mockData";
@@ -34,16 +36,23 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
 }
 
 /* ─── Screen type ─── */
-type Screen = "loading" | "results" | "taf" | "testResults";
+type Screen = "loading" | "results" | "taf" | "testResults" | "onboarding";
+
+/** Open straight onto the onboarding prototype with /#onboarding */
+const initialScreen = (): Screen =>
+  window.location.hash.startsWith("#onboarding") ? "onboarding" : "loading";
 
 const LOADING_DURATION = 20_000;
 
 /* ═══ Main App ═══ */
 export default function App() {
-  const [screen, setScreen] = useState<Screen>("loading");
+  const [screen, setScreen] = useState<Screen>(initialScreen);
   const [mockConfig, setMockConfig] = useState<MockConfig>(defaultMockConfig);
   const [selectedService, setSelectedService] = useState<ServiceRow | null>(null);
   const [showReportModal, setShowReportModal] = useState(false);
+  /* Onboarding drawer overlays the current screen (e.g. Results) without
+     changing `screen`, so the faults journey underneath keeps its state. */
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   /* Auto-timer: loading → results after 20s */
   useEffect(() => {
@@ -106,6 +115,8 @@ export default function App() {
   /* ─── Render current screen ─── */
   function renderScreen() {
     switch (screen) {
+      case "onboarding":
+        return <OnboardingPage />;
       case "loading":
         return <LoadingView />;
       case "results":
@@ -119,6 +130,7 @@ export default function App() {
               setShowReportModal(true);
             }}
             onTakeAction={handleViewProgress}
+            onStartTour={() => setShowOnboarding(true)}
           />
         );
       case "taf":
@@ -161,6 +173,16 @@ export default function App() {
           onDiagnosticsComplete={handleDiagComplete}
         />
 
+        {/* Onboarding tour — slides down over the current screen and back up on
+            minimise. Rendered as an overlay so the screen underneath (Results)
+            keeps its state while the tour is open. */}
+        {showOnboarding && (
+          <OnboardingDrawer
+            firstName="Kiriakos"
+            onClose={() => setShowOnboarding(false)}
+          />
+        )}
+
         {/* Dev scenario switcher — minimized by default */}
         <div className="dev-switcher">
           <button
@@ -174,7 +196,7 @@ export default function App() {
             <>
               <div className="dev-switcher-row">
                 <span>Screen:</span>
-                {(["loading", "results", "taf", "testResults"] as Screen[]).map((s) => (
+                {(["loading", "results", "taf", "testResults", "onboarding"] as Screen[]).map((s) => (
                   <button
                     key={s}
                     className={screen === s ? "active" : ""}

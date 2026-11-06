@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Scratch / temporary working files (screenshots, one-off scripts)
+.tmp-*
+.tmp-capture/
