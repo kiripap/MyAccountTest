@@ -194,21 +194,12 @@ export default function App() {
           {switcherOpen && (
             <>
               <div className="dev-switcher-row">
-                <span>Tour:</span>
-                <button
-                  className={showOnboarding ? "active" : ""}
-                  onClick={() => setShowOnboarding(true)}
-                >
-                  open tour
-                </button>
-              </div>
-              <div className="dev-switcher-row">
                 <span>Screen:</span>
                 {(["loading", "results", "taf", "testResults", "onboarding"] as Screen[]).map((s) => (
                   <button
                     key={s}
-                    className={screen === s ? "active" : ""}
-                    onClick={() => skipToScreen(s)}
+                    className={s === "onboarding" ? (showOnboarding ? "active" : "") : screen === s ? "active" : ""}
+                    onClick={() => (s === "onboarding" ? setShowOnboarding(true) : skipToScreen(s))}
                   >
                     {s}
                   </button>
