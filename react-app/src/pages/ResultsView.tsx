@@ -3,8 +3,6 @@ import { FaultCards } from "../components/FaultCards";
 import { ArcContentSwitcher } from "../components/ArcContentSwitcher";
 import { ServiceTable } from "../components/ServiceTable";
 import { Breadcrumbs, BreadcrumbsItem, BreadcrumbsLink } from "@arc-ui/components/Breadcrumbs";
-import { ButtonV2 } from "@arc-ui/components/ButtonV2";
-import { BtIconArrowDown } from "@arc-ui/icons/BtIconArrowDown";
 import { allServicesRows, faultsRows } from "../data/mockData";
 import type { ServiceRow, ResultsVariant } from "../data/mockData";
 
@@ -19,11 +17,9 @@ interface ResultsViewProps {
   onViewProgress: () => void;
   onStartFixing: () => void;
   onTakeAction: () => void;
-  /** Opens the My Account onboarding tour (drawer slides down over this page). */
-  onStartTour?: () => void;
 }
 
-export function ResultsView({ resultsVariant = "single-card", onReportFault, onViewProgress, onStartFixing, onTakeAction, onStartTour }: ResultsViewProps) {
+export function ResultsView({ resultsVariant = "single-card", onReportFault, onViewProgress, onStartFixing, onTakeAction }: ResultsViewProps) {
   const [switcherValue, setSwitcherValue] = useState("all");
 
   const handleSwitcherChange = useCallback((value: string) => {
@@ -35,22 +31,6 @@ export function ResultsView({ resultsVariant = "single-card", onReportFault, onV
 
   return (
     <div className="container bleed">
-      {/* "Take the My Account tour" entry point — slides the onboarding drawer
-          down over this page (Figma node 2375-71363). */}
-      {onStartTour && (
-        <div className="ob-tour-entry">
-          <ButtonV2
-            size="l"
-            icon={BtIconArrowDown}
-            ariaLabel="Take the My Account tour"
-            onClick={onStartTour}
-          />
-          <button type="button" className="ob-tour-entry-label" onClick={onStartTour}>
-            Take the My Account tour
-          </button>
-        </div>
-      )}
-
       {/* Hero header: single Dashboard breadcrumb + heading */}
       <div className="hero-header">
         <Breadcrumbs>

@@ -947,27 +947,3 @@ body {
 @media (min-width: 1920px) { .taf-section { margin-top: 96px; } }
 
 /* (Interested-in grid styles consolidated in the TAF section above) */
-
-/* ── "Take the My Account tour" entry point (Figma node 2375-71363) ──
-   Centered purple down-arrow button with a grey label beneath. Clicking it
-   slides the onboarding drawer down over the Results page. */
-.ob-tour-entry {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 24px 0 8px;
-}
-.ob-tour-entry-label {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  font-size: 16px;
-  line-height: 20px;
-  color: var(--text-secondary);
-  font-family: inherit;
-}
-.ob-tour-entry-label:hover {
-  color: var(--indigo-800);
-}

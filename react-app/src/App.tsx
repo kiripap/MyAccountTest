@@ -130,7 +130,6 @@ export default function App() {
               setShowReportModal(true);
             }}
             onTakeAction={handleViewProgress}
-            onStartTour={() => setShowOnboarding(true)}
           />
         );
       case "taf":
@@ -194,6 +193,15 @@ export default function App() {
           </button>
           {switcherOpen && (
             <>
+              <div className="dev-switcher-row">
+                <span>Tour:</span>
+                <button
+                  className={showOnboarding ? "active" : ""}
+                  onClick={() => setShowOnboarding(true)}
+                >
+                  open tour
+                </button>
+              </div>
               <div className="dev-switcher-row">
                 <span>Screen:</span>
                 {(["loading", "results", "taf", "testResults", "onboarding"] as Screen[]).map((s) => (
