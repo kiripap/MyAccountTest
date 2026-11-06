@@ -31,6 +31,12 @@ import "@arc-ui/components/lib/Text/styles.css";
 import "@arc-ui/components/lib/Badge/styles.css";
 import "@arc-ui/components/lib/Breadcrumbs/styles.css";
 import "@arc-ui/components/lib/Spacing/styles.css";
+import "@arc-ui/components/lib/Tabs/styles.css";
+import "@arc-ui/components/lib/Box/styles.css";
+import "@arc-ui/components/lib/Surface/styles.css";
+import "@arc-ui/components/lib/ButtonGroup/styles.css";
+import "@arc-ui/components/lib/Icon/styles.css";
+import "@arc-ui/components/lib/VisuallyHidden/styles.css";
 
 // App-level overrides
 import "./app.css";
