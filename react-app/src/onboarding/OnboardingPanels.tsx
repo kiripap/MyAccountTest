@@ -1,15 +1,15 @@
 import { useState, type CSSProperties, type ReactNode } from "react";
 
 import { Box } from "@arc-ui/components/Box";
-import { ButtonGroup } from "@arc-ui/components/ButtonGroup";
 import { ButtonV2 } from "@arc-ui/components/ButtonV2";
 import { Heading } from "@arc-ui/components/Heading";
 import { Icon } from "@arc-ui/components/Icon";
 import { Tabs, TabsContent, TabsItem, TabsList } from "@arc-ui/components/Tabs";
 import { Text } from "@arc-ui/components/Text";
 import { VisuallyHidden } from "@arc-ui/components/VisuallyHidden";
+import { BtIconArrowAltRight } from "@arc-ui/icons/BtIconArrowAltRight";
 import { BtIconCalendar } from "@arc-ui/icons/BtIconCalendar";
-import { BtIconChevronRight } from "@arc-ui/icons/BtIconChevronRight";
+import { BtIconChevronRightMid } from "@arc-ui/icons/BtIconChevronRightMid";
 import { BtIconLocation } from "@arc-ui/icons/BtIconLocation";
 import { BtIconShield } from "@arc-ui/icons/BtIconShield";
 import { BtIconWholeHomeWifi } from "@arc-ui/icons/BtIconWholeHomeWifi";
@@ -238,7 +238,7 @@ export const TrackingPanel = () => (
                   <ButtonV2
                     label="Amend"
                     buttonStyle="compact"
-                    icon={BtIconChevronRight}
+                    icon={BtIconChevronRightMid}
                     iconPosition="afterText"
                     ariaLabel="Amend installation date"
                   />
@@ -256,7 +256,7 @@ export const TrackingPanel = () => (
                   <ButtonV2
                     label="More info"
                     buttonStyle="compact"
-                    icon={BtIconChevronRight}
+                    icon={BtIconChevronRightMid}
                     iconPosition="afterText"
                     ariaLabel="More info about installation address"
                   />
@@ -310,7 +310,7 @@ export const ProductsPanel = () => (
                   action={
                     <ButtonV2
                       buttonStyle="compact"
-                      icon={BtIconChevronRight}
+                      icon={BtIconChevronRightMid}
                       ariaLabel={`Find out about ${extra.label}`}
                     />
                   }
@@ -328,8 +328,11 @@ export const ProductsPanel = () => (
 
 /* ─────────────────────────── Billing ─────────────────────────── */
 
-const BILLING_COPY =
+const BILLING_FIRST_BILL_COPY =
   "This is due to one\u2011off charges being included, along with a pro\u2011rated charge that covers the time between your service activation and your first full billing period.";
+
+const BILLING_DIRECT_DEBIT_COPY =
+  "Set up a Direct Debit to pay your bills automatically, giving you one less thing to remember.";
 
 export const BillingPanel = () => (
   <div className="ob-panel">
@@ -346,22 +349,32 @@ export const BillingPanel = () => (
               Your first bill may be higher than expected
             </Heading>
             <Text size="m" elementType="p">
-              {BILLING_COPY}
+              {BILLING_FIRST_BILL_COPY}
             </Text>
+            <div className="ob-billing-action">
+              <ButtonV2
+                label="View bills"
+                buttonStyle="tertiary"
+                icon={BtIconArrowAltRight}
+                iconPosition="afterText"
+              />
+            </div>
           </div>
           <div {...reveal(3)}>
             <Heading level="3" size="s" isResponsive={false}>
               Never miss a payment with direct debit
             </Heading>
             <Text size="m" elementType="p">
-              {BILLING_COPY}
+              {BILLING_DIRECT_DEBIT_COPY}
             </Text>
-          </div>
-          <div {...reveal(4)}>
-            <ButtonGroup gap={12}>
-              <ButtonV2 label="Set up direct debit" />
-              <ButtonV2 label="View bills" buttonStyle="secondary" />
-            </ButtonGroup>
+            <div className="ob-billing-action">
+              <ButtonV2
+                label="Set up direct debit"
+                buttonStyle="tertiary"
+                icon={BtIconArrowAltRight}
+                iconPosition="afterText"
+              />
+            </div>
           </div>
         </div>
       </Box>

@@ -17,7 +17,11 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(42, 42, 42, 0.45);
+  /* While the tour is expanded, darken and blur the page behind it so the
+     drawer reads as the focus. */
+  background: rgba(26, 20, 40, 0.62);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   animation: obFadeIn 0.45s ease both;
 }
 .ob-overlay.is-closing { animation: obFadeOut 0.5s ease 0.1s both; }
@@ -140,6 +144,11 @@
 .ob-tile { display: flex; align-items: center; gap: 16px; min-height: 48px; }
 .ob-tile-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; color: var(--ob-text); }
 .ob-tile-action { flex-shrink: 0; }
+/* Tile chevrons: Arc "chevron right mid" at 32px. */
+.ob-tile-action .arc-ButtonV2 .arc-Icon {
+  width: 32px;
+  height: 32px;
+}
 /* Tile overline label — Label/Overline: Headline 14 / 16, +1.4px tracking, uppercase. */
 .ob-tile-copy .arc-Heading {
   font-size: 14px;
@@ -151,17 +160,61 @@
 /* Tile body copy: Regular 16 / normal. */
 .ob-tile-copy .arc-Text { font-size: 16px; line-height: normal; }
 
-/* Billing */
-.ob-billing-sections { display: flex; flex-direction: column; gap: 40px; }
-.ob-billing-sections > div:not(:last-child) { display: flex; flex-direction: column; gap: 12px; }
-/* Billing section headings — Heading/Fixed/S: 20 / 28. Body copy: Body/L 20 / 28. */
+/* Billing (Figma node 2384-74853) — two sections, each heading + body + a
+   tertiary "arrow" button. 48px between sections; 12px heading→body; 16px
+   body→button. */
+.ob-billing-sections { display: flex; flex-direction: column; gap: 48px; }
+.ob-billing-sections > div { display: flex; flex-direction: column; gap: 12px; }
+/* Billing section headings — Heading/Fixed/S: BT Curve Headline 20 / 28 / 500. */
 .ob-billing-sections .arc-Heading { font-size: 20px; line-height: 28px; font-weight: 500; }
+/* Body copy — Body/M: Regular 16 / 24. */
 .ob-billing-sections .arc-Text { font-size: 16px; line-height: 24px; }
+/* Tertiary action sits 16px below the copy. Arc's padding rules are highly
+   specific, so scope the override under .ob-overlay to beat them and pin the
+   label flush-left with the heading/body copy. */
+.ob-billing-action { margin-top: 4px; }
+/* Arc's padding rules are highly specific; override them so the label pins
+   flush-left with the heading/body copy (no indent from the button chrome). */
+.ob-billing-action .arc-ButtonV2 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.ob-billing-action .arc-ButtonV2 .arc-Icon { width: 32px; height: 32px; }
 
 /* Footer */
 .ob-footer { flex-shrink: 0; }
 .ob-footer-row { display: flex; align-items: center; gap: 12px; }
 .ob-footer-wide { width: 288px; max-width: 100%; }
+
+/* Prev/next nav controls — the Arc arrow glyph IS the circle, so the button
+   draws no ring of its own (no double stroke). Icon is 48px to match the
+   Start/End tour CTA height. */
+.ob-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  color: var(--ob-brand);
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.ob-nav-btn .arc-Icon { width: 48px; height: 48px; }
+.ob-nav-btn:active { transform: scale(0.96); }
+/* Back: unfilled — the glyph is a single-stroke outline circle + arrow, so the
+   button stays transparent (one stroke only). On hover the ring + arrow darken
+   to match the "End tour" secondary CTA's hover (border → #3f187f). */
+.ob-nav-btn--back { background: transparent; }
+.ob-nav-btn--back:hover {
+  color: var(--button-v2-colors-light-bg-hover, #3f187f);
+}
+/* Next: filled — white disc so the arrow cutout in the filled glyph reads as a
+   solid white arrow on the purple circle. */
+.ob-nav-btn--next { background: #ffffff; }
+.ob-nav-btn--next:hover { color: var(--button-v2-colors-light-bg-hover, #3f187f); }
 
 /* Progress dots */
 .ob-dots {
@@ -184,16 +237,43 @@
 }
 .ob-dots li.is-active { width: 60px; background: var(--ob-brand); }
 
-/* Close (collapse) control straddling the bottom edge */
+/* Close (collapse) control straddling the bottom edge. The brand-filled
+   circle sits on a white ring so it reads cleanly against the drawer edge. */
 .ob-close {
   position: absolute;
   left: 50%;
   bottom: 0;
   transform: translate(-50%, 50%);
-  padding: 8px;
+  padding: 0;
   border-radius: 50%;
-  background: var(--ob-surface);
+  background: transparent;
   line-height: 0;
+}
+.ob-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  /* White disc behind the icon so the arrow (a cutout in the filled glyph)
+     reads as a solid white arrow regardless of what's behind the button. */
+  background: #ffffff;
+  border-radius: 50%;
+  /* The filled icon paints the purple disc; its arrow cutout reveals the white
+     background → purple circle with a clean white arrow, no stroke. */
+  color: var(--ob-brand);
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.ob-close-btn:hover { color: var(--sem-color-bg-primary-light-hover, #44119a); }
+.ob-close-btn:active { transform: scale(0.96); }
+/* Arc icons render as a mask filled by currentColor — the glyph is a 44px filled
+   circle with the up-arrow carved out, so no extra ring/stroke is drawn. */
+.ob-close-btn .arc-Icon {
+  width: 44px;
+  height: 44px;
 }
 
 /* ── Illustration (Three.js canvas) ───────────────────────────────────── */

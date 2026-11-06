@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 
-import { ButtonGroup } from "@arc-ui/components/ButtonGroup";
 import { ButtonV2 } from "@arc-ui/components/ButtonV2";
 import { VisuallyHidden } from "@arc-ui/components/VisuallyHidden";
-import { BtIconArrowAltLeft } from "@arc-ui/icons/BtIconArrowAltLeft";
-import { BtIconArrowAltRight } from "@arc-ui/icons/BtIconArrowAltRight";
-import { BtIconArrowUp } from "@arc-ui/icons/BtIconArrowUp";
+import { Icon } from "@arc-ui/components/Icon";
+import { BtIconArrowLeft } from "@arc-ui/icons/BtIconArrowLeft";
+import { BtIconArrowRightFill } from "@arc-ui/icons/BtIconArrowRightFill";
+import { BtIconArrowUpFill } from "@arc-ui/icons/BtIconArrowUpFill";
 
 import { BillingPanel, ProductsPanel, TrackingPanel, WelcomePanel } from "./OnboardingPanels";
 import { PHASES, transitionDuration, type Phase } from "./phases";
@@ -163,13 +163,9 @@ export const OnboardingDrawer = ({
       );
     }
     const back = (
-      <ButtonV2
-        buttonStyle="secondary"
-        size="l"
-        icon={BtIconArrowAltLeft}
-        ariaLabel="Previous step"
-        onClick={prev}
-      />
+      <button type="button" className="ob-nav-btn ob-nav-btn--back" aria-label="Previous step" onClick={prev}>
+        <Icon icon={BtIconArrowLeft} size={48} />
+      </button>
     );
     if (phase === "billing") {
       return (
@@ -182,10 +178,12 @@ export const OnboardingDrawer = ({
       );
     }
     return (
-      <ButtonGroup gap={12} size="l" ariaLabel="Tour navigation">
+      <div className="ob-footer-row" role="group" aria-label="Tour navigation">
         {back}
-        <ButtonV2 size="l" icon={BtIconArrowAltRight} ariaLabel="Next step" onClick={next} />
-      </ButtonGroup>
+        <button type="button" className="ob-nav-btn ob-nav-btn--next" aria-label="Next step" onClick={next}>
+          <Icon icon={BtIconArrowRightFill} size={48} />
+        </button>
+      </div>
     );
   };
 
@@ -238,7 +236,9 @@ export const OnboardingDrawer = ({
         </VisuallyHidden>
 
         <div className="ob-close">
-          <ButtonV2 size="l" icon={BtIconArrowUp} ariaLabel="Close tour" onClick={close} />
+          <button type="button" className="ob-close-btn" aria-label="Close tour" onClick={close}>
+            <Icon icon={BtIconArrowUpFill} size={44} />
+          </button>
         </div>
       </section>
     </div>
